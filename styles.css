@@ -1,0 +1,23 @@
+/*
+	Comment
+*/
+
+h1 {
+	font-family: cursive;
+	font-size: 24px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 26.4px;
+	text-align: center;
+	font-style: italic;
+}
+
+
+/*a { color: Red; } */
+
+/*.TestClass {
+	color: Black;
+	background-color: White;
+	text-align: left;
+} */
