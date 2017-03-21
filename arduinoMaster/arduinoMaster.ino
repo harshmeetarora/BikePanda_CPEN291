@@ -2,27 +2,36 @@
 #define hallPin A1
 #define tripSwitch 8
 
+/*
+ * Constants used in speed/distance calculations: 
+ */
 const float wheelDiameter = 0.6858; // in m
 const float numMagnets = 8.0;
 const float pi = 3.14159;
-
-// Calculate the max/min RPS of the wheel based
-// on a max speed of 15m/s, min speed of 0.3m/s
-const unsigned long maxRPS = 15/(wheelDiameter*pi);  
+// Calculate the min RPS of the wheel based
+// on a max speed of 15m/s, min speed of 0.3m/s :
+// const unsigned long maxRPS = 15/(wheelDiameter*pi);  
 const double minRPS = 0.3/(wheelDiameter*pi); 
 
+/* 
+ * Global variables to display:  
+ */
 int bikeSpeed = 0;  // Speed in km/h TODO: Decide if we want this to be a float
-int totalDistance = 0; // TODO: Decide units of distance... metres?
-int tripDistance = 0; // TODO: decide what should happen if the odomoter overflows 
+float FPtotalDistance = 0; // TODO: Decide units of distance... metres?
+float FPtripDistance = 0; // TODO: decide what should happen if the odomoter overflows 
                       // (max val now is 99999, only 100km)
+int totalDistance = 0;
+int tripDistance = 0;
 
+/*
+ * Hidden global variables: 
+ */
 // Flag indicates if the magnet is adjacent to the Hall Effect Sensor
 char magnetFlag;
-// Reset tells us if the magnet (by the sensor) has only just arrived there
-// for debouncing the speed calculation
+// Reset acts as an "enable pin" for debouncing the speed calculation,
+// magnetFlag can't be set to 1 unless magnetReset is 1
 char magnetReset = 1;  
-
-// Records when  the magnet last passed the sensor,
+// Records when the magnet last passed the sensor,
 unsigned long lastInterrupt = 0.0; // used for calculting speed
 
 // initialize the library with the numbers of the interface pins
@@ -61,12 +70,14 @@ void updateLCD()
   lcd.print(bikeSpeed);
   lcd.setCursor(6,1);
   lcd.print(totalDistance);
+  lcd.print("m");
   lcd.setCursor(12,1);
   lcd.print(tripDistance);
+  lcd.print("m");
 }
 
-// Updates global bike speed variable using time since 
-// if a magnet is detected last interrupt
+// Speedometer: updates global bike speed variable 
+// using time interval between last two magnet detections
 void updateBikeSpeed()
 {
   long period = millis()-lastInterrupt;
@@ -105,10 +116,12 @@ void checkForMagnet()
 void updateDistances(){
   if(magnetFlag)
   {
-    totalDistance += (pi*wheelDiameter/numMagnets);
-    tripDistance  += (pi*wheelDiameter/numMagnets);
+    FPtotalDistance += (pi*wheelDiameter/numMagnets);
+    totalDistance = FPtotalDistance;
+    FPtripDistance  += (pi*wheelDiameter/numMagnets);
+    tripDistance = FPtripDistance;
   }
   if(digitalRead(tripSwitch)){
-    tripDistance = 0;
+    FPtripDistance = 0;
   }
 }
