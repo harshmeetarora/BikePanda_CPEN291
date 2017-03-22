@@ -30,8 +30,7 @@
 		}
 		.jumbotron {
 		  margin-bottom: 0px;
-		  color: white;
-		  text-shadow: black 0.3em 0.3em 0.3em;
+		  color: black;
 		}
 		.lettherebewhite {
 			background-color: white;
@@ -74,13 +73,26 @@
 	</nav>
   
 	<!-- JUMBOTRON -->
-	<div class="jumbotron text-center bgimage">
+	<div class="jumbotron text-center">
 	  <div class="container">
-		<h1>Bike Panda</h1>
-		<br>
-		<img class="img-circle coverlogo" src="./images/BikePandaLogo.png" alt="Bike Panda Logo">
-		<br><br><br>
-		<a href="#" class="btn btn-lg btn-primary">Sign Up/Log In</a>
+		<form>
+			<!-- Enter email -->
+			<div class="form-group">
+				<label>Name</label>
+				<input type="email" class="form-control" placeholder="Email">
+			</div>
+			
+			<!-- Enter password -->
+			<div class="form-group"	>
+				<label>Name</label>
+				<input type="password" class="form-control" placeholder="Password">
+			</div>
+			
+			<!-- Log In Button -->
+			<button type="submit" class="btn btn-default">Log In</button>
+			
+		</form>
+		
 	  </div>
 	</div>
 	<br>
