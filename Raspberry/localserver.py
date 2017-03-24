@@ -3,7 +3,7 @@ import socket
 import picamera
 
 server_socket = socket.socket()
-server_socket.bind(('0.0.0.0', 8000))
+server_socket.bind(('190.168.0.103', 8000))
 server_socket.listen(0)
     
 with picamera.PiCamera() as camera:
