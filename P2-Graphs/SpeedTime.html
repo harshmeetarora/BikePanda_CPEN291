@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Speed vs Time Graph</title>
+    <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
+    <canvas id="SpeedTimeChart" width="400" height="400"></canvas>
+<script>
+var ctx = document.getElementById("SpeedTimeChart").getContext("2d");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'Speed(km/h) vs. Time(minutes)',
+            borderColor: "rgb(28, 103, 3)",
+            pointBackgroundColor: "rgba(28, 103, 3)",
+            fill: false,
+            data: [{
+                x: 10,
+                y: 2
+            }, {
+                x: 0,
+                y: 10
+            }, {
+                x: 10,
+                y: 5
+            }]
+        }]
+    },
+    options: {
+        scales: {
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom'
+            }],
+            yAxes: [{
+                ticks: {
+                    min: 0
+                }
+            }]
+        }
+    }
+});
+</script>
+</body>
+
+</html>
