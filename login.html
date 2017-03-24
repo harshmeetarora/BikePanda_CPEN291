@@ -28,12 +28,14 @@
 	<meta name="msapplication-TileImage" content="./images/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
 
-    <!-- Bootstrap -->
+
+   <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+	
 	
 	<style>
 		body {
-			background-color: black;
+			background-color: Gainsboro  ;
 		}
 		.navbar {
 			margin-bottom:0;
@@ -47,6 +49,11 @@
 			max-width: 220px;
 			max-height: 220px;
 		}
+        .breadcrumb{
+            margin: 0px;
+            border-radius: 0px;
+            background-color: Gainsboro;
+        }
 		.bgimage{
 			background-image: url('./images/naturepath.jpg');
 			background-size:100% 100%;
@@ -54,12 +61,14 @@
 				height: auto;
 		}
 		.jumbotron {
-		  margin-bottom: 0px;
-		  color: black;
+		    margin-bottom: 0px;
+            background-color: Azure ;
+		    color: black;
 		}
 		.lettherebewhite {
 			background-color: white;
 		}
+        
 	</style>
 	
 
@@ -73,7 +82,9 @@
   
   <!-- BODY -->
   <body>
-	<!-- NAV BAR -->
+   
+	<!--Navbar-->
+     <!-- NAV BAR -->
 	<nav class="navbar navbar-inverse">
 	  <div class="container">
 		<div class="navbar-header">
@@ -83,46 +94,87 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="./cover.html"><img class="navlogo" src="./images/BikePandaLogo.png"></a> 
+		  <a class="navbar-brand" href="./cover.html"><img class="navlogo" src="./images/BikePandaLogo.png"></a>
 		  <a class="navbar-brand" href="./cover.html">Bike Panda</a>
 		</div>
 
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-		  <ul class="nav navbar-nav">
-			<li><a href="./login.html">Log in<span class="sr-only">(current)</span></a></li>
-		  </ul>
 		  <ul class="nav navbar-nav navbar-right">
 			<li><a href="./about.html">About Us</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
-	</nav>
-  
-	<!-- JUMBOTRON -->
+	</nav> 
+   
+      
+    <main>  
+    <!-- BreadCrumb -->  
+    <div class="container">
+                <ol class="breadcrumb">
+                  <li><a href="./cover.html">Home</a></li>
+                  <li class="active">Account</li>
+                </ol>
+              
+    </div>  
+      
+	<!-- JUMBOTRON INCLUDING THE FORM -->
 	<div class="jumbotron text-center">
 	  <div class="container">
-		<form>
-			<!-- Enter email -->
-			<div class="form-group">
-				<label>Email</label>
-				<input type="email" class="form-control" placeholder="Email">
-			</div>
-			
-			<!-- Enter password -->
-			<div class="form-group"	>
-				<label>Password</label>
-				<input type="password" class="form-control" placeholder="Password">
-			</div>
-			
-			<!-- Log In Button -->
-			<button type="submit" class="btn btn-default">Log In</button>
-			
-		</form>
-		
+          <div class="row">
+              <div class="col-md-1 col-sm-1 col-lg-1"></div>
+              <div class="col-md-5 col-sm-5 col-lg-5" >  
+                  <h2 style="margin-top:0px">Sign Up</h2>
+                      <hr>
+                        <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-lg" placeholder="First Name">
+                                </div>
+                            </div>   
+                            <div class="col-md-6">    
+                                <div class="form-group">
+                                    <input type="text" class="form-control input-lg" placeholder="Last Name">
+                                </div>
+                           </div>
+                        </div>
+                        <form class="form"> 
+                            <div class="form-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="basic-addon1">@</span>
+                                  <input type="text" class="form-control input-lg" placeholder="Username" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                            <!-- Enter email -->
+                            <div class="form-group"	>
+                                <!--<label>Password</label>-->
+                                <input type="email" class="form-control input-lg" placeholder="Email">
+                            </div>
+
+                            <!-- Enter password -->
+                            <div class="form-group"	>
+                                <!--<label>Password</label>-->
+                                <input type="password" class="form-control input-lg" placeholder="Password">
+                            </div>
+
+                            <!-- Log In Button -->
+                            <button type="submit" class="btn btn-default btn-lg">Log In</button>
+                        </form>
+                    </div>
+              </div>
+              <div class="col-md-1 col-sm-1 col-lg-1"></div>           
+              <div class="col-md-4 col-sm-4 col-lg-4">
+                <h2 style="margin-top:0px">Begin Your Journey Here</h2>  
+                <hr>  
+                <p>Insert Some Bullshit Information Here</p>
+             </div> 
+             <div class="col-md-1 col-sm-1 col-lg-1"></div>
+        </div>
 	  </div>
 	</div>
-	<br>
-	
+	</main>
+      
+      
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
