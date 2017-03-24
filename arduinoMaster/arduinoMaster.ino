@@ -6,7 +6,7 @@
  * Constants used in speed/distance calculations: 
  */
 const float wheelDiameter = 0.6858; // in m
-const float numMagnets = 8.0;
+const float numMagnets = 3.0;
 const float pi = 3.14159;
 // Calculate the min RPS of the wheel based
 // on a max speed of 15m/s, min speed of 0.3m/s :
@@ -19,7 +19,7 @@ const double minRPS = 0.3/(wheelDiameter*pi);
 int bikeSpeed = 0;  // Speed in km/h TODO: Decide if we want this to be a float
 float FPtotalDistance = 0; // TODO: Decide units of distance... metres?
 float FPtripDistance = 0; // TODO: decide what should happen if the odomoter overflows 
-                      // (max val now is 99999, only 100km)
+                      // (max val now is 9999, only 10000km)
 int totalDistance = 0;
 int tripDistance = 0;
 
@@ -58,7 +58,7 @@ void loop()
   updateDistances();
   updateBikeSpeed();
   magnetFlag ? digitalWrite(LED_BUILTIN, HIGH) : digitalWrite(LED_BUILTIN, LOW);
-  delay(150);
+  delay(50);
 }
 
 void updateLCD()
@@ -70,10 +70,10 @@ void updateLCD()
   lcd.print(bikeSpeed);
   lcd.setCursor(6,1);
   lcd.print(totalDistance);
-  lcd.print("m");
+  lcd.print("km");
   lcd.setCursor(12,1);
   lcd.print(tripDistance);
-  lcd.print("m");
+  lcd.print("km");
 }
 
 // Speedometer: updates global bike speed variable 
@@ -84,7 +84,7 @@ void updateBikeSpeed()
   if(!magnetFlag){
     if(period>(1000.0/minRPS/numMagnets))
     { 
-      bikeSpeed=0.0;
+      bikeSpeed=0;
       updateLCD();
     }
   } else { //3.6*1m/s = 1km/h, period/1000 converts from us to s
@@ -117,9 +117,9 @@ void updateDistances(){
   if(magnetFlag)
   {
     FPtotalDistance += (pi*wheelDiameter/numMagnets);
-    totalDistance = FPtotalDistance;
+    totalDistance = FPtotalDistance/1000;
     FPtripDistance  += (pi*wheelDiameter/numMagnets);
-    tripDistance = FPtripDistance;
+    tripDistance = FPtripDistance/1000;
   }
   if(digitalRead(tripSwitch)){
     FPtripDistance = 0;
