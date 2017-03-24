@@ -4,8 +4,8 @@ import requests
 # read from arduino
 # speed = readFromArduino()
 
-payload = {'speed': 'thespeed', 'distance': 'd_travelled'}
-r = requests.post('http://38.88.74.90/hello.php', data=payload)
+payload = {'speed': 'speed_variable', 'distance': 'distance_variable'}
+r = requests.post("http://38.88.74.90/hello.php", data=payload)
 print(r.text)
 
 url = 'http://httpbin.org/post'
