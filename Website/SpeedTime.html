@@ -4,6 +4,9 @@
 <head>
     <title>Speed vs Time Graph</title>
     <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
+
+  </head>
+  <body>
     <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
 <script>
 var ctx = document.getElementById("SpeedTimeChart");
@@ -66,7 +69,7 @@ var myChart = new Chart(ctx, {
         //            unit: "minute"
         //        }
         //    }],
-            
+
             xAxes: [{
                 type: 'linear',
                 position: 'bottom',
@@ -90,7 +93,7 @@ var myChart = new Chart(ctx, {
                     max: 20
                 }
             }]
-            
+
         },
         animation: {
 
