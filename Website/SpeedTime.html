@@ -13,8 +13,8 @@ var myChart = new Chart(ctx, {
     type: 'line',
     data: {
         datasets: [{
-            borderColor: "rgb(28, 103, 3)",
-            pointBackgroundColor: "rgba(28, 103, 3)",
+            borderColor: "rgb(86, 10, 16)",
+            pointBackgroundColor: "rgb(86, 10, 16)",
             fill: false,
             data: [{
                 x: 2,
@@ -47,41 +47,59 @@ var myChart = new Chart(ctx, {
         }]
     },
     options: {
-        title:{
-             display: true,
-            text: "Speed(km/h) vs. Time(min)"
+        title: {
+            display: true,
+            text: "Name, Date, Start time",
+            fontColor: "rgb(28, 103, 3)"
         },
         legend:{
             display: false
         },
         scales: {
-            
             xAxes: [{
-                type: 'linear',
-                position: 'bottom',
+                type: "linear",
+                position: "bottom",
                 scaleLabel: {
                     display: true,
-                    labelString: "something in here"
+                    labelString: "Time in minutes",
+                    fontColor: "rgb(28, 103, 3)"
                 },
                 ticks: {
                     min: 0,
-                    max: 20
+                    max: 20,
+                    fontColor: "rgb(28, 103, 3)"
+                },
+            
+                gridLines: {
+                //     display: true,
+                //     color: "rgb(28, 103, 3)",
+                    zeroLineColor: "rgb(28, 103, 3)"
                 }
             }],
             yAxes: [{
+                type: "linear",
+                position: "left",
                 scaleLabel: {
                     display: true,
-                    labelString: "something else in here"
+                    labelString: "Speed in km/h",
+                    fontColor: "rgb(28, 103, 3)"
                 },
                 ticks: {
                     min: 0,
-                    max: 20
+                    max: 20,
+                    fontColor: "rgb(28, 103, 3)"
+                },
+            
+                gridLines: {
+                //     display: true,
+                //     color: "rgb(28, 103, 3)",
+                    zeroLineColor: "rgb(28, 103, 3)"
                 }
             }]
             
         },
         animation: {
-                duration: 0,
+                duration: 900,
                 }
     }
 });
