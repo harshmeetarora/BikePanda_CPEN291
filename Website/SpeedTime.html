@@ -13,9 +13,10 @@ var myChart = new Chart(ctx, {
     type: 'line',
     data: {
         datasets: [{
-            borderColor: "rgb(86, 10, 16)",
-            pointBackgroundColor: "rgb(86, 10, 16)",
-            fill: false,
+            borderColor: "rgb(8, 96, 8)",
+            pointBackgroundColor: "rgb(8, 96, 8)",
+            fill: true,
+            backgroundColor: "rgba(8, 96, 8, 0.2)",
             data: [{
                 x: 2,
                 y: 10
@@ -50,7 +51,7 @@ var myChart = new Chart(ctx, {
         title: {
             display: true,
             text: "Name, Date, Start time",
-            fontColor: "rgb(28, 103, 3)"
+            fontColor: "rgb(0, 0, 0)"
         },
         legend:{
             display: false
@@ -62,18 +63,16 @@ var myChart = new Chart(ctx, {
                 scaleLabel: {
                     display: true,
                     labelString: "Time in minutes",
-                    fontColor: "rgb(28, 103, 3)"
+                    fontColor: "rgb(0, 0, 0)"
                 },
                 ticks: {
                     min: 0,
                     max: 20,
-                    fontColor: "rgb(28, 103, 3)"
+                    fontColor: "rgb(0, 0, 0)"
                 },
             
                 gridLines: {
-                //     display: true,
-                //     color: "rgb(28, 103, 3)",
-                    zeroLineColor: "rgb(28, 103, 3)"
+                    zeroLineColor: "rgb(0, 0, 0)"
                 }
             }],
             yAxes: [{
@@ -82,18 +81,16 @@ var myChart = new Chart(ctx, {
                 scaleLabel: {
                     display: true,
                     labelString: "Speed in km/h",
-                    fontColor: "rgb(28, 103, 3)"
+                    fontColor: "rgb(0, 0, 0)"
                 },
                 ticks: {
                     min: 0,
                     max: 20,
-                    fontColor: "rgb(28, 103, 3)"
+                    fontColor: "rgb(0, 0, 0)"
                 },
             
                 gridLines: {
-                //     display: true,
-                //     color: "rgb(28, 103, 3)",
-                    zeroLineColor: "rgb(28, 103, 3)"
+                    zeroLineColor: "rgb(0, 0, 0)"
                 }
             }]
             
