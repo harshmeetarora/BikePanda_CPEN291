@@ -17,11 +17,8 @@ const double minRPS = 0.3/(wheelDiameter*pi);
  * Global variables to display:  
  */
 int bikeSpeed = 0;  // Speed in km/h TODO: Decide if we want this to be a float
-float FPtotalDistance = 0; // TODO: Decide units of distance... metres?
-float FPtripDistance = 0; // TODO: decide what should happen if the odomoter overflows 
-                      // (max val now is 9999, only 10000km)
-int totalDistance = 0;
-int tripDistance = 0;
+float totalDistance = 0;  // units of distance: metres, max val is 999.9km
+float tripDistance = 0;   // max val is 99.9km
 
 /*
  * Hidden global variables: 
@@ -32,7 +29,9 @@ char magnetFlag;
 // magnetFlag can't be set to 1 unless magnetReset is 1
 char magnetReset = 1;  
 // Records when the magnet last passed the sensor,
-unsigned long lastInterrupt = 0.0; // used for calculting speed
+unsigned long lastInterrupt = 0.0; // used for calculating speed
+
+unsigned long lastSpeedCalc = 0.0; // used to stabilize speed calculation
 
 // initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(12, 11, 7, 6, 5, 4);
@@ -58,7 +57,7 @@ void loop()
   updateDistances();
   updateBikeSpeed();
   magnetFlag ? digitalWrite(LED_BUILTIN, HIGH) : digitalWrite(LED_BUILTIN, LOW);
-  delay(50);
+//  delay(20);
 }
 
 void updateLCD()
@@ -68,12 +67,33 @@ void updateLCD()
   lcd.print("km/h  Dist  Trip");
   lcd.setCursor(0,1);
   lcd.print(bikeSpeed);
-  lcd.setCursor(6,1);
-  lcd.print(totalDistance);
-  lcd.print("km");
-  lcd.setCursor(12,1);
-  lcd.print(tripDistance);
-  lcd.print("km");
+  Serial.println(bikeSpeed);
+  if(totalDistance < 100){
+    lcd.setCursor(6,1);
+    lcd.print(totalDistance,0);
+    lcd.print("m");
+  } else if (totalDistance < 10000) {
+    lcd.setCursor(6,1);
+    lcd.print(totalDistance/1000.0,1);
+    lcd.print("km");
+  } else {
+    lcd.setCursor(5,1);
+    lcd.print(totalDistance/1000.0,1);
+    lcd.print("km");    
+  }
+  if(tripDistance < 1000){
+    lcd.setCursor(12,1);
+    lcd.print(tripDistance,0);
+    lcd.print("m");
+  } else if (tripDistance < 10000) {
+    lcd.setCursor(11,1);
+    lcd.print(tripDistance/1000.0,1);
+    lcd.print("km");
+  } else {
+    lcd.setCursor(10,1);
+    lcd.print(tripDistance/1000.0,1);
+    lcd.print("km");    
+  }
 }
 
 // Speedometer: updates global bike speed variable 
@@ -85,12 +105,18 @@ void updateBikeSpeed()
     if(period>(1000.0/minRPS/numMagnets))
     { 
       bikeSpeed=0;
-      updateLCD();
+      if(millis() - lastSpeedCalc > 200){
+         updateLCD();
+         lastSpeedCalc = millis();
+      }
     }
   } else { //3.6*1m/s = 1km/h, period/1000 converts from us to s
     bikeSpeed = 3.6*(pi*wheelDiameter/numMagnets)/(period/1000.0); 
     lastInterrupt = millis();
-    updateLCD();
+    if(millis() - lastSpeedCalc > 200) {    
+      updateLCD();
+      lastSpeedCalc = millis(); 
+    }
   }
 }
 
@@ -116,12 +142,10 @@ void checkForMagnet()
 void updateDistances(){
   if(magnetFlag)
   {
-    FPtotalDistance += (pi*wheelDiameter/numMagnets);
-    totalDistance = FPtotalDistance/1000;
-    FPtripDistance  += (pi*wheelDiameter/numMagnets);
-    tripDistance = FPtripDistance/1000;
+    totalDistance += (pi*wheelDiameter/numMagnets);
+    tripDistance  += (pi*wheelDiameter/numMagnets);
   }
   if(digitalRead(tripSwitch)){
-    FPtripDistance = 0;
+    tripDistance = 0;
   }
 }
