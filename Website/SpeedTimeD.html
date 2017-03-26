@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Speed vs Time Graph</title>
+    <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
+</head>
+<body>
+    <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
+<script>
+var ctx = document.getElementById("SpeedTimeChart");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        datasets: [{
+            borderColor: "rgb(8, 96, 8)",
+            pointBackgroundColor: "rgb(8, 96, 8)",
+            fill: true,
+            backgroundColor: "rgba(8, 96, 8, 0.2)",
+            data: [{
+                x: 2,
+                y: 10
+            }, {
+                x: 3,
+                y: 8
+            }, {
+                x: 4,
+                y: 9
+            }, {
+                x: 5,
+                y: 7
+            },{
+                x: 6,
+                y: 10
+            }, {
+                x: 7,
+                y: 13
+            },{
+                x: 8,
+                y: 15
+            }, {
+                x: 9,
+                y: 17
+            },{
+                x: null,
+                y: null
+            },{
+                x: null,
+                y: null
+            },]
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: "Name, Date, Start time",
+            fontColor: "rgb(0, 0, 0)"
+        },
+        legend:{
+            display: false
+        },
+        scales: {
+            xAxes: [{
+                type: "linear",
+                position: "bottom",
+                scaleLabel: {
+                    display: true,
+                    labelString: "Time in minutes",
+                    fontColor: "rgb(0, 0, 0)"
+                },
+                ticks: {
+                    min: 0,
+                    max: 20,
+                    fontColor: "rgb(0, 0, 0)"
+                },
+            
+                gridLines: {
+                    zeroLineColor: "rgb(0, 0, 0)"
+                }
+            }],
+            yAxes: [{
+                type: "linear",
+                position: "left",
+                scaleLabel: {
+                    display: true,
+                    labelString: "Speed in km/h",
+                    fontColor: "rgb(0, 0, 0)"
+                },
+                ticks: {
+                    min: 0,
+                    max: 20,
+                    fontColor: "rgb(0, 0, 0)"
+                },
+            
+                gridLines: {
+                    zeroLineColor: "rgb(0, 0, 0)"
+                }
+            }]
+            
+        },
+        animation: {
+                duration: 0,
+                }
+    }
+});
+</script>
+</body>
+
+</html>
