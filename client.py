@@ -3,8 +3,9 @@ import requests
 
 # read from arduino
 # speed = readFromArduino()
+#Speed : 10 : Trip distance : 200 : Total distance : 1000 /r/n
 
-payload = {'speed': 'speed_variable', 'distance': 'distance_variable'}
+payload = {inData}
 r = requests.post("http://38.88.74.90/hello.php", data=payload)
 print(r.text)
 
