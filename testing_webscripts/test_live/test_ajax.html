@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>AJAX polling</title>
+</head>
+<body>
+	<p>This number is LIVE baby: <span class="number"></span></p>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script>
+		(function(){
+			var poll = function(){
+				$.ajax(
+				{
+					url:'number.json',
+					dataType:'json',
+					type: 'get',
+					success: function(data){
+						$('.number').text(data.nos);
+					},
+					error: function(){}
+				});
+			};
+			setInterval(function(){
+				poll();
+			}, 2000);
+		})();
+	</script> 
+</body>
+</html>

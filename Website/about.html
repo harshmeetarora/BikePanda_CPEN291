@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-   
+
     <title>About Bike Panda</title>
 	<link rel="icon" href="http://example.com/favicon.png">
 
@@ -27,14 +27,14 @@
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="msapplication-TileImage" content="./images/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
-		
+
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-	
+
 	<!-- Style -->
 	<style>
 		body {
-			background-color: black;
+			background-color: aliceblue;
 		}
 		.navbar {
 			margin-bottom:0;
@@ -60,14 +60,20 @@
 		  text-shadow: black 0.3em 0.3em 0.3em;
 		}
 		.lettherebewhite {
-			background-color: white;
+			background-color: #F0F0F0;
 		}
 		.headshot {
 			width: 8vw;
 			height: auto;
 		}
+		img.displayed {
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			max-height: 50vh;
+		}
 	</style>
-	
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -75,10 +81,10 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  
+
   <!-- BODY -->
   <body>
-  
+
 	<!-- NAV BAR -->
 	<nav class="navbar navbar-inverse">
 	  <div class="container">
@@ -89,8 +95,8 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="./cover.html"><img class="navlogo" src="./images/BikePandaLogo.png"></a> 
-		  <a class="navbar-brand" href="./cover.html">Bike Panda</a>
+		  <a class="navbar-brand" href="./index.html"><img class="navlogo" src="./images/BikePandaLogo.png"></a>
+		  <a class="navbar-brand" href="./index.html">Bike Panda</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -98,25 +104,33 @@
 		  <ul class="nav navbar-nav">
 			<li><a href="./login.html">Log in<span class="sr-only">(current)</span></a></li>
 		  </ul>
-		  <ul class="nav navbar-nav navbar-right">
-			<li><a href="./about.html">About Us</a></li>
-		  </ul>
 		</div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
 	</nav>
-  
+
 	<!-- JUMBOTRON -->
 	<div class="jumbotron text-center bgimage">
 	  <div class="container">
 		<h1>About Bike Panda</h1>
 	  </div>
 	</div>
-	<br>
-	
-	<!-- Info --> 
+
+	<!-- Info -->
 	<div class="container lettherebewhite">
 		<h1 align="center">Our Product</h1>
-		<hr><br>
+		<hr>
+		<div class="col-md-1"></div>
+		<div class="col-md-10"><img class="displayed" src="./images/bicycle.jpg" alt="Bicycle"></div>
+		<div class="col-md-1"></div>
+	</div>
+	<div class="container lettherebewhite">
+		<br>
+		<div class="col-md-1"></div>
+		<div class="col-md-10"><p align="center">This is a bike.  Neat right?</p></div>
+		<div class="col-md-1"></div>
+	</div>
+	<div class="container lettherebewhite">
+		<br>
 		<div class="col-md-1"></div>
 		<div class="col-md-5"><img class="img-thumbnail" src="./images/forest.jpg" alt="Forest"></div>
 		<div class="col-md-5"><p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </p></div>
@@ -143,7 +157,7 @@
 		<div class="col-md-5"><img class="img-thumbnail" src="./images/forest.jpg" alt="Forest"></div>
 		<div class="col-md-1"></div>
 	</div>
-		
+
 	<div class="container lettherebewhite"><br><br></div>
 
 	<!-- TEAM INFO -->
@@ -151,7 +165,7 @@
 		<hr>
 		<h1 align="center">Our Team</h1>
 		<hr><br>
-		
+
 		<!-- Team Row 1 -->
 		<div class="col-md-2"></div>
 		<div class="col-md-2 text-center"><img class="headshot" src="./images/franklin.jpg" alt="Franklin"><h3>Franklin</h3><p>CEO</p></div>
@@ -169,14 +183,14 @@
 		<div class="col-md-2 text-center"><img class="headshot" src="./images/franklin.jpg" alt="Franklin"><h3>Franklin</h3><p>C3P0</p></div>
 		<div class="col-md-2 text-center"><img class="headshot" src="./images/franklin.jpg" alt="Franklin"><h3>Franklin</h3><p>COW</p></div>
 		<div class="col-md-2"></div>
-				
-	</div>	
-	
+
+	</div>
+
 	<!-- MINI FOOTER -->
 	<div class="container lettherebewhite">
 		<br><hr><br>
 	</div>
-	
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
