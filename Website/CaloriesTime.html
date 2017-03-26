@@ -6,17 +6,17 @@
     <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
 </head>
 <body>
-    <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
+    <canvas id="CaloriesTimeChart" width="400" height="200"></canvas>
 <script>
-var ctx = document.getElementById("SpeedTimeChart");
+var ctx = document.getElementById("CaloriesTimeChart");
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
         datasets: [{
-            borderColor: "rgb(8, 96, 8)",
-            pointBackgroundColor: "rgb(8, 96, 8)",
+            borderColor: "rgb(226, 124, 22)",
+            pointBackgroundColor: "rgb(226, 124, 22))",
             fill: true,
-            backgroundColor: "rgba(8, 96, 8, 0.2)",
+            backgroundColor: "rgba(226, 124, 22, 0.2)",
             data: [{
                 x: 2,
                 y: 10
@@ -41,13 +41,7 @@ var myChart = new Chart(ctx, {
             }, {
                 x: 9,
                 y: 17
-            },{
-                x: null,
-                y: null
-            },{
-                x: null,
-                y: null
-            },]
+            }]
         }]
     },
     options: {
@@ -69,8 +63,8 @@ var myChart = new Chart(ctx, {
                     fontColor: "rgb(0, 0, 0)"
                 },
                 ticks: {
-                    min: 0,
-                    max: 20,
+                    // min: 0,
+                    // max: 20,
                     fontColor: "rgb(0, 0, 0)"
                 },
             
@@ -83,12 +77,12 @@ var myChart = new Chart(ctx, {
                 position: "left",
                 scaleLabel: {
                     display: true,
-                    labelString: "Speed in km/h",
+                    labelString: "Calories burned this trip",
                     fontColor: "rgb(0, 0, 0)"
                 },
                 ticks: {
-                    min: 0,
-                    max: 20,
+                    // min: 0,
+                    // max: 20,
                     fontColor: "rgb(0, 0, 0)"
                 },
             
