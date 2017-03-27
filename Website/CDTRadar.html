@@ -4,15 +4,35 @@
 <head>
     <title>Speed vs Time Graph</title>
     <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
+    <script src="./Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 <body>
+        <script>
+        var calData=[]; // average calorie Data array
+        var timeData=[]; // average time Data array
+        var disData=[]; // average distance Data array
+            var testvar;//for temporary testing
+                 $.ajax(
+                {
+                    url:'http://38.88.74.90/get_user_data.php',
+                    dataType:'json',
+                    async: 'false',
+                    type: 'get',
+                    success: function(data){
+                        $('.testvar').text(testvar = data.jan.calories);
+                        calData.push(data.feb.calories);
+                        calData.push(data.mar.calories);
+                        calData.push(data.apr.calories);
+
+                    },
+                    error: function(){}
+                });
+    </script>
     <canvas id="CDTRadarChart" width="200" height="230"></canvas>
 <script>
-var calData; // average calorie Data array
-var timeData; // average time Data array
-var disData; // average distance Data array
 var ctx = document.getElementById("CDTRadarChart");
-var myChart = new Chart(ctx, {
+var configuration = {
     type: 'radar',
     data: {
         labels: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -24,14 +44,14 @@ var myChart = new Chart(ctx, {
             backgroundColor: "rgba(21, 6, 135, 0.2)",
             lineTension: 0.1,
             data: calData
-        }, {
-            label: "Time spend biking (hours)",
-            borderColor: "rgb(155, 0, 18)",
-            pointBackgroundColor: "rgb(155, 0, 18)",
-            fill: true,
-            backgroundColor: "rgba(155, 0, 18, 0.2)",
-            lineTension: 0.1,
-            data: timeData
+        // }, {
+        //     label: "Time spend biking (hours)",
+        //     borderColor: "rgb(155, 0, 18)",
+        //     pointBackgroundColor: "rgb(155, 0, 18)",
+        //     fill: true,
+        //     backgroundColor: "rgba(155, 0, 18, 0.2)",
+        //     lineTension: 0.1,
+        //     data: timeData
         }, {
             label: "Distance biked (10*km) ",
             borderColor: "rgb(28, 103, 3)",
@@ -66,8 +86,10 @@ var myChart = new Chart(ctx, {
                 duration: 900,
                 }
     }
-});
+};
+
+var myChart = new Chart(ctx, configuration);
+
 </script>
-</body>
 
 </html>
