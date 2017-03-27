@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Speed vs Time Graph</title>
+    <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
+</head>
+<body>
+    <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
+<script>
+var myChart;
+var Data;
+var ctx = document.getElementById("SpeedTimeChart");
+var configuration;
+function reconfigure(newData, maxTime, minTime){
+    configuration = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    borderColor: "rgb(8, 96, 8)",
+                    pointBackgroundColor: "rgb(8, 96, 8)",
+                    fill: true,
+                    backgroundColor: "rgba(8, 96, 8, 0.2)",
+                    data: newData
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Name, Date, Start time",
+                    fontColor: "rgb(0, 0, 0)"
+                },
+                legend:{
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        type: "linear",
+                        position: "bottom",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time in minutes",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: minTime,
+                            max: maxTime,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }],
+                    yAxes: [{
+                        type: "linear",
+                        position: "left",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Speed in km/h",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: 0,
+                            max: 20,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }]
+                    
+                },
+                animation: {
+                        duration: 0,
+                        }
+            }
+        };
+}
+setInterval(function(){
+    if ( time > maxTime){
+        maxTime = maxTime + 5;
+        minTime = minTime + 5;
+    }
+
+    reconfigure(Data);            
+    myChart = new Chart(ctx, configuration);
+},1000);
+
+</script>
+</body>
+
+</html>

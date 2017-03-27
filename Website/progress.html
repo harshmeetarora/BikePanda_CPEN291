@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+      
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Progress</title>
+ 
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -38,6 +40,10 @@
   </head>
     
   <body>
+      
+    <Files yourpage.html>
+    AddType application/x-httpd-php .html
+    </Files>   
     <!-- NAV BAR -->
 	<nav class="navbar navbar-inverse">
 	  <div class="container">
@@ -57,8 +63,14 @@
 		  <ul class="nav navbar-nav">
 			<li><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
 		  </ul>
-          <ul class="nav navbar-nav navbar-right">
-			<li><a href="./login.html">Log in<span class="sr-only">(current)</span></a></li>
+          <ul class="nav navbar-nav navbar-right">  
+			<li>
+                <?php if(isset($_SESSION['id'])): ?>
+                    <a href="./login.html">Log in<span class="sr-only">(current)</span></a>
+                <?php else: ?>
+                    <a href="./index.html">Log out<span class="sr-only">(current)</span></a>
+                <?php endif; ?>
+            </li>
 		  </ul> 
 		  <ul class="nav navbar-nav navbar-right">
 			<li><a href="./about.html">About Us</a></li>

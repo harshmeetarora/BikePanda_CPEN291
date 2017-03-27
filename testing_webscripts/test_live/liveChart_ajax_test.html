@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speed vs Time Graph</title>
+    <script src="./Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body>
+
+    <script>
+    var speed;
+    var distance;
+        (function(){
+            var poll = function(){
+                $.ajax(
+                {
+                    url:'number.json',
+                    dataType:'json',
+                    async: 'false',
+                    type: 'get',
+                    success: function(data){
+                        
+                        $('.speed').text(speed=data.speed);
+                        $('.distance').text(distance = data.distance);
+                        $('.latitude').text(data.latitude);
+                        $('.longitude').text(data.longitude);
+                        $('.altitude').text(data.altitude);
+                        $('.incline').text(data.incline);
+ 
+                    },
+                    error: function(){}
+                });
+            };
+            setInterval(function(){
+                poll();
+            }, 2000);
+        })();
+    </script> 
+
+    <p>SPEED: <span class="speed"></span> </p>
+    <p>DISTANCE: <span class="distance"></span> </p>
+    <p>LATITUDE: <span class="latitude"></span> </p>
+    <p>LONGITUDE: <span class="longitude"></span> </p>
+    <p>INCLINE: <span class="incline"></span> </p>
+    <p>ALTITUDE: <span class="altitude"></span> </p>
+
+    <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
+<script>
+var Data = [{
+                x: 0,
+                y: 0
+            }];
+
+
+var ctx = document.getElementById("SpeedTimeChart");
+var configuration;
+function reconfigure(Dataset){
+configuration = {
+    type: 'line',
+    data: {
+        datasets: [{
+            borderColor: "rgb(8, 96, 8)",
+            pointBackgroundColor: "rgb(8, 96, 8)",
+            fill: true,
+            backgroundColor: "rgba(8, 96, 8, 0.2)",
+            data: Dataset
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: "Name, Date, Start time",
+            fontColor: "rgb(0, 0, 0)"
+        },
+        legend:{
+            display: false
+        },
+        scales: {
+            xAxes: [{
+                type: "linear",
+                position: "bottom",
+                scaleLabel: {
+                    display: true,
+                    labelString: "Time in minutes",
+                    fontColor: "rgb(0, 0, 0)"
+                },
+                ticks: {
+                    min: 0,
+                    max: 20,
+                    fontColor: "rgb(0, 0, 0)"
+                },
+            
+                gridLines: {
+                    zeroLineColor: "rgb(0, 0, 0)"
+                }
+            }],
+            yAxes: [{
+                type: "linear",
+                position: "left",
+                scaleLabel: {
+                    display: true,
+                    labelString: "Speed in km/h",
+                    fontColor: "rgb(0, 0, 0)"
+                },
+                ticks: {
+                    min: 0,
+                    max: 20,
+                    fontColor: "rgb(0, 0, 0)"
+                },
+            
+                gridLines: {
+                    zeroLineColor: "rgb(0, 0, 0)"
+                }
+            }]
+            
+        },
+        animation: {
+                duration: 0,
+                }
+    }
+};
+};
+reconfigure(Data);
+var myChart = new Chart(ctx, configuration);
+var i = 0;
+setInterval(function(){
+    i = i + 1;
+    DataAddition = {
+        x: i,
+        y: distance
+    }
+
+    Data.push(DataAddition);
+    reconfigure(Data);            
+    myChart = new Chart(ctx, configuration);
+},2000);
+
+</script>
+</body>
+
+</html>
