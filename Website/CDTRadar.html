@@ -8,6 +8,9 @@
 <body>
     <canvas id="CDTRadarChart" width="200" height="230"></canvas>
 <script>
+var calData; // average calorie Data array
+var timeData; // average time Data array
+var disData; // average distance Data array
 var ctx = document.getElementById("CDTRadarChart");
 var myChart = new Chart(ctx, {
     type: 'radar',
@@ -20,7 +23,7 @@ var myChart = new Chart(ctx, {
             fill: true,
             backgroundColor: "rgba(21, 6, 135, 0.2)",
             lineTension: 0.1,
-            data: [12600, 11600, 13250, 12700, 12500, 11467, 12687, 13265, 11900, 12570, 11600, 12610]
+            data: calData
         }, {
             label: "Time spend biking (hours)",
             borderColor: "rgb(155, 0, 18)",
@@ -28,7 +31,7 @@ var myChart = new Chart(ctx, {
             fill: true,
             backgroundColor: "rgba(155, 0, 18, 0.2)",
             lineTension: 0.1,
-            data: [1250, 1100, 1050, 950, 1025, 1280, 890, 1020, 920, 920, 1020, 980]
+            data: timeData
         }, {
             label: "Distance biked (10*km) ",
             borderColor: "rgb(28, 103, 3)",
@@ -36,7 +39,7 @@ var myChart = new Chart(ctx, {
             fill: true,
             backgroundColor: "rgba(28, 103, 3, 0.2)",
             lineTension: 0.1,
-            data: [280, 330, 300, 380, 320, 320, 300, 260, 320, 300, 270,350]
+            data: disData
         }]
     },
     options: {
@@ -54,7 +57,6 @@ var myChart = new Chart(ctx, {
 
         },
         scale: {
-            // lineArc: false
             pointLabels: {
                 fontColor: "rgb(0, 0, 0)",
                 fontSize: 14
