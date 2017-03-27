@@ -9,8 +9,11 @@
 var myChart
 var Data;
 var configuration;
+var time;
+var minTime;
+var minTime;
 var ctx = document.getElementById("AltitudeTimeChart");
-function reconfigure(newData){
+function reconfigure(newData, maxTime, minTime){
     configuration =  {
         type: 'line',
         data: {
@@ -41,8 +44,8 @@ function reconfigure(newData){
                         fontColor: "rgb(0, 0, 0)"
                     },
                     ticks: {
-                        // min: 0,
-                        // max: 20,
+                        min: maxTime,
+                        max: minTime,
                         fontColor: "rgb(0, 0, 0)"
                     },
                     gridLines: {
@@ -74,6 +77,11 @@ function reconfigure(newData){
     };
 }
 setInterval(function(){
+    if ( time > maxTime){
+        maxTime = maxTime + 5;
+        minTime = minTime + 5;
+    }
+
     reconfigure(Data);            
     myChart = new Chart(ctx, configuration);
 },1000);
