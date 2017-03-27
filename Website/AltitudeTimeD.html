@@ -6,117 +6,77 @@
     <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
     <canvas id="AltitudeTimeChart" width="400" height="400"></canvas>
 <script>
+var myChart
+var Data;
+var configuration;
 var ctx = document.getElementById("AltitudeTimeChart");
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        datasets: [{
-            borderColor: "rgb(86, 10, 16)",
-            pointBackgroundColor: "rgb(86, 10, 16)",
-            fill: true,
-            backgroundColor: "rgba(86, 10, 16, 0.3)",
-            data: [{
-                x: 0,
-                y: 15
-            }, {
-                x: 1,
-                y: 19
-            },{
-                x: 2,
-                y: 18
-            },{
-                x: 3,
-                y: 19
-            },{
-                x: 4,
-                y: 17
-            },{
-                x: 5,
-                y: 15
-            },{
-                x: 6,
-                y: 16
-            },{
-                x: 7,
-                y: 12
-            },{
-                x: 8,
-                y: 18
-            },{
-                x: 9,
-                y: 19
-            },{
-                x: 10,
-                y: 18
-            },{
-                x: 11,
-                y: 20
-            },{
-                x: 12,
-                y: 21
-            },{
-                x: 13,
-                y: 22
-            },{
-                x: 14,
-                y: 23
-            }, {
-                x: 15,
-                y: 23
+function reconfigure(newData){
+    configuration =  {
+        type: 'line',
+        data: {
+            datasets: [{
+                borderColor: "rgb(86, 10, 16)",
+                pointBackgroundColor: "rgb(86, 10, 16)",
+                fill: true,
+                backgroundColor: "rgba(86, 10, 16, 0.3)",
+                data: Data
             }]
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: "Altitude(meters) vs. Time(minutes)",
-            fontColor: "rgb(0, 0, 0)"
         },
-        legend:{
-            display: false
-        },
-        scales: {
-            xAxes: [{
-                type: "linear",
-                position: "bottom",
-                scaleLabel: {
-                    display: true,
-                    labelString: "Time in minutes",
-                    fontColor: "rgb(0, 0, 0)"
-                },
-                ticks: {
-                    // min: 0,
-                    // max: 20,
-                    fontColor: "rgb(0, 0, 0)"
-                },
-                gridLines: {
-                    zeroLineColor: "rgb(0, 0, 0)"
-                }
-            }],
-            yAxes: [{
-                type: "linear",
-                position: "left",
-                scaleLabel: {
-                    display: true,
-                    labelString: "Altitude in meters",
-                    fontColor: "rgb(0, 0, 0)"
-                },
-                ticks: {
-                    // min: 0,
-                    // max: 20,
-                    fontColor: "rgb(0, 0, 0)"
-                },
-                gridLines: {
-                    zeroLineColor: "rgb(0, 0, 0)"
-                }
-            }]  
-        },
-        animation: {
-                duration: 0,
-                }
-    }
-});
+        options: {
+            title: {
+                display: true,
+                text: "Altitude(meters) vs. Time(minutes)",
+                fontColor: "rgb(0, 0, 0)"
+            },
+            legend:{
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    type: "linear",
+                    position: "bottom",
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time in minutes",
+                        fontColor: "rgb(0, 0, 0)"
+                    },
+                    ticks: {
+                        // min: 0,
+                        // max: 20,
+                        fontColor: "rgb(0, 0, 0)"
+                    },
+                    gridLines: {
+                        zeroLineColor: "rgb(0, 0, 0)"
+                    }
+                }],
+                yAxes: [{
+                    type: "linear",
+                    position: "left",
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Altitude in meters",
+                        fontColor: "rgb(0, 0, 0)"
+                    },
+                    ticks: {
+                        // min: 0,
+                        // max: 20,
+                        fontColor: "rgb(0, 0, 0)"
+                    },
+                    gridLines: {
+                        zeroLineColor: "rgb(0, 0, 0)"
+                    }
+                }]  
+            },
+            animation: {
+                    duration: 0,
+                    }
+        }
+    };
+}
+setInterval(function(){
+    reconfigure(Data);            
+    myChart = new Chart(ctx, configuration);
+},1000);
 </script>
 </body>
-
 </html>
