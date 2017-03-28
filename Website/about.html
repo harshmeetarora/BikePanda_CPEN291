@@ -119,6 +119,24 @@
 			vertical-align: middle;
 			display: inline-block;
 		}
+		.textContainer2 { 
+			height: 300px; 
+		}
+		.textContainer2 h4 {
+			vertical-align: middle;
+			display: inline-block;
+		}
+		.mylist ul li{
+			list-style-type:none;
+		}
+		.mylist ul li:before{
+			font-family: 'Glyphicons Halflings';
+			content: "\e067"; 
+			position: relative;
+		}
+		.img-thumbnail {
+			background: aliceblue;
+		}
 	</style>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -185,7 +203,7 @@
 		<br>
 	</div>
 	<div class="container lettherebewhite">
-		<br><hr/><br>
+		<hr/><br>
 	</div>
 	
 	<!-- OUR PRODUCT -->
@@ -197,13 +215,23 @@
 		<br>
 		<div class="col-md-1"></div>
 		<div class="col-md-5"><img class="img-thumbnail productimage" src="./images/bicycle.jpg" alt="Bike Panda on a bike"></div>
-		<div class="col-md-5 textContainer text-center"><h4><i>Founded by seven Computer Engineering students from the University of British Columbia, Bike Panda was created to allow cyclists to get more out of their trips by bicycle.  </i></h4></div>
+		<div class="col-md-5 textContainer text-center"><h4><i>The Bike Panda device is secured to your bicycle and tracks your trip.</br>By recording and charting trip data, Bike Panda shows statistics from past or current ride sessions so users can see their progress.</i></h4></div>
 		<div class="col-md-1"></div>
 	</div>
 	<div class="container lettherebewhite">
 		<br>
 		<div class="col-md-1"></div>
-		<div class="col-md-5 textContainer text-center"><h4><i>By recording and charting trip data, Bike Panda shows statistics from past or current ride sessions so users can see their progress.</i></h4></div>
+		<div class="mylist col-md-5">
+			<br><br>
+			<h4 class="text-center"><i>Available trip data includes:</i></h4>
+			<ul>
+				<li>  Speed versus time</li>
+				<li>  Altitude versus time</li>
+				<li>  Distance travelled</li>
+				<li>  Time spent on bike</li>
+				<li>  Calories burned</li>
+			</ul>
+		</div>
 		<div class="col-md-5"><img class="img-thumbnail productimage" src="./images/graph.jpg" alt="Graphed Data"></div>
 		<div class="col-md-1"></div>
 	</div>
