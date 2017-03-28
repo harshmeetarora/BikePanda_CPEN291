@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html
 
 <head>
     <title>Altitude vs Time Graph</title>
@@ -10,6 +10,8 @@ var myChart
 var Data;
 var configuration;
 var time;
+var lastPlottedTime;
+var altitude;
 var minTime;
 var minTime;
 var ctx = document.getElementById("AltitudeTimeChart");
@@ -75,12 +77,38 @@ function reconfigure(newData, maxTime, minTime){
     };
 }
 setInterval(function(){
-    maxTime = 10 + 5 * (time/10);
-    minTime = 5 * (time/10);
 
-    reconfigure(Data, maxTime, minTime);            
-    myChart = new Chart(ctx, configuration);
-},1000);
+    $.ajax(
+                {
+        url:'http://38.88.74.90/get_user_data.php',
+        dataType:'json',
+        async: 'false',
+        type: 'get',
+        success: function(data){
+            // data:
+            time = data.xxxxx;
+            altitude = data.yyyy;
+            
+        },
+        error: function(){}
+    });
+
+    if ( time != lastPlottedTime){
+    
+        Data.push({
+            x: time,
+            y: altitude
+        });
+
+        maxTime = 10 + 5 * (time/10);
+        minTime = 5 * (time/10);
+
+        reconfigure(Data, maxTime, minTime);            
+        myChart = new Chart(ctx, configuration);
+        
+        lastPlottedTime = time;
+    }
+},500);
 </script>
 </body>
 </html>

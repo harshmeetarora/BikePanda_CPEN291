@@ -10,11 +10,13 @@
 <script>
 var myChart;
 var Data;
-var time;
-var previousTime;
-var backDoor = 0;
-var ctx = document.getElementById("SpeedTimeChart");
 var configuration;
+var time;
+var lastPlottedTime;
+var speed;
+var minTime;
+var minTime;
+var ctx = document.getElementById("SpeedTimeChart");
 function reconfigure(newData, maxTime, minTime){
     configuration = {
             type: 'line',
@@ -82,23 +84,40 @@ function reconfigure(newData, maxTime, minTime){
         };
 }
 setInterval(function(){
+
+    $.ajax(
+                {
+        url:'http://38.88.74.90/get_user_data.php',
+        dataType:'json',
+        async: 'false',
+        type: 'get',
+        // data: 
+        success: function(data){
+            time = data.time;
+            speed = data.speed;
+            
+        },
+        error: function(){}
+    });
+
+    if ( time != lastPlottedTime){
     
-    if( time == previousTime){
-        backdoor++;
-        if (backDoor > 8)
-        break;
-    }else {
-        backDoor = 0;
+        Data.push({
+            x: time,
+            y: speed
+        });
+
+        maxTime = 10 + 5 * (time/10);
+        minTime = 5 * (time/10);
+
+        reconfigure(Data, maxTime, minTime);            
+        myChart = new Chart(ctx, configuration);
+        
+        lastPlottedTime = time;
     }
-
-    maxTime = 10 + 5 * (time/10);
-    minTime = 5 * (time/10);
-
-    reconfigure(Data, maxTime, minTime);            
-    myChart = new Chart(ctx, configuration);
-},1000);
-
+},500);
 </script>
 </body>
 
 </html>
+
