@@ -2,11 +2,11 @@
 <html>
 
 <head>
-    <title>Speed vs Time Graph</title>
+    <title>Altitude vs Distance Graph</title>
     <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
 </head>
 <body>
-    <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
+    <canvas id="AltitudeDistanceChart" width="400" height="200"></canvas>
 <script>
 var freshData = [];
  $.ajax(
@@ -19,21 +19,21 @@ var freshData = [];
                     success: function(data){
                         var i;
                         for ( i = 0; i < data.length; i++){
-                            freshData.push( {x: data[i].time, y: data[i].speed} )
+                            freshData.push( {x: data[i].distance, y: data[i].altitude} )
                         }
                     },
                     error: function(){}
                 });
 
-var ctx = document.getElementById("SpeedTimeChart");
+var ctx = document.getElementById("AltitudeDistanceChart");
 var configuration = {
     type: 'line',
     data: {
         datasets: [{
-            borderColor: "rgb(8, 96, 8)",
-            pointBackgroundColor: "rgb(8, 96, 8)",
+            borderColor: "rgb(221, 129, 0)",
+            pointBackgroundColor: "rgb(221, 129, 0)",
             fill: true,
-            backgroundColor: "rgba(8, 96, 8, 0.2)",
+            backgroundColor: "rgba(221, 129, 0, 0.2)",
             data: freshData
         }]
     },
@@ -52,7 +52,7 @@ var configuration = {
                 position: "bottom",
                 scaleLabel: {
                     display: true,
-                    labelString: "Time in minutes",
+                    labelString: "Distance in km",
                     fontColor: "rgb(0, 0, 0)"
                 },
                 ticks: {
@@ -69,7 +69,7 @@ var configuration = {
                 position: "left",
                 scaleLabel: {
                     display: true,
-                    labelString: "Speed in km/h",
+                    labelString: "Altitude in m",
                     fontColor: "rgb(0, 0, 0)"
                 },
                 ticks: {
