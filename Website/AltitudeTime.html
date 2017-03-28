@@ -6,70 +6,43 @@
     <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
     <canvas id="AltitudeTimeChart" width="400" height="400"></canvas>
 <script>
+var freshData = [];
+var startTime;
+
+$.ajax(
+                {
+                    url:'./get_user_data.php',
+                    dataType:'json',
+                    async: 'false',
+                    type: 'get',
+                    data: { tripid: 54},
+                    success: function(data){
+                        var i;
+                        for ( i = 0; i < data.length - 1; i++){
+                            freshData.push( {x: data[i].time, y: data[i].altitude} )
+                        }
+                        startTime = data.start_time;
+                    },
+                    error: function(){}
+                });
+
+
 var ctx = document.getElementById("AltitudeTimeChart");
-var myChart = new Chart(ctx, {
+var configuration = {
     type: 'line',
     data: {
         datasets: [{
             borderColor: "rgb(86, 10, 16)",
             pointBackgroundColor: "rgb(86, 10, 16)",
             fill: true,
-            backgroundColor: "rgba(86, 10, 16, 0.3)",
-            data: [{
-                x: 0,
-                y: 15
-            }, {
-                x: 1,
-                y: 19
-            },{
-                x: 2,
-                y: 18
-            },{
-                x: 3,
-                y: 19
-            },{
-                x: 4,
-                y: 17
-            },{
-                x: 5,
-                y: 15
-            },{
-                x: 6,
-                y: 16
-            },{
-                x: 7,
-                y: 12
-            },{
-                x: 8,
-                y: 18
-            },{
-                x: 9,
-                y: 19
-            },{
-                x: 10,
-                y: 18
-            },{
-                x: 11,
-                y: 20
-            },{
-                x: 12,
-                y: 21
-            },{
-                x: 13,
-                y: 22
-            },{
-                x: 14,
-                y: 23
-            }, {
-                x: 15,
-                y: 23
-            }]
+            backgroundColor: "rgba(86, 10, 16, 0.2)",
+            data: freshData
         }]
     },
     options: {
         title: {
             display: true,
-            text: "Altitude(meters) vs. Time(minutes)",
+            text: startTime,
             fontColor: "rgb(0, 0, 0)"
         },
         legend:{
@@ -85,8 +58,7 @@ var myChart = new Chart(ctx, {
                     fontColor: "rgb(0, 0, 0)"
                 },
                 ticks: {
-                    // min: 0,
-                    // max: 20,
+                    min: 0,
                     fontColor: "rgb(0, 0, 0)"
                 },
                 gridLines: {
@@ -102,8 +74,6 @@ var myChart = new Chart(ctx, {
                     fontColor: "rgb(0, 0, 0)"
                 },
                 ticks: {
-                    // min: 0,
-                    // max: 20,
                     fontColor: "rgb(0, 0, 0)"
                 },
                 gridLines: {
@@ -112,10 +82,14 @@ var myChart = new Chart(ctx, {
             }]  
         },
         animation: {
-                duration: 900,
+                duration: 1200,
                 }
     }
-});
+};
+
+setTimeout(function() {
+    var myChart = new Chart(ctx, configuration);
+}, 1000);
 </script>
 </body>
 

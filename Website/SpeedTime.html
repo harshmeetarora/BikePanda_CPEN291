@@ -9,6 +9,7 @@
     <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
 <script>
 var freshData = [];
+var startTime;
  $.ajax(
                 {
                     url:'./get_user_data.php',
@@ -18,9 +19,10 @@ var freshData = [];
                     data: { tripid: 54},
                     success: function(data){
                         var i;
-                        for ( i = 0; i < data.length; i++){
+                        for ( i = 0; i < data.length - 1; i++){
                             freshData.push( {x: data[i].time, y: data[i].speed} )
                         }
+                        startTime = data.start_time;
                     },
                     error: function(){}
                 });
@@ -40,7 +42,7 @@ var configuration = {
     options: {
         title: {
             display: true,
-            text: "Name, Date, Start time",
+            text: startTime,
             fontColor: "rgb(0, 0, 0)"
         },
         legend:{
