@@ -8,8 +8,25 @@
 <body>
     <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
 <script>
+var data = [];
+ $.ajax(
+                {
+                    url:'./get_user_data.php',
+                    dataType:'json',
+                    async: 'false',
+                    type: 'get',
+                    data: '54',
+                    success: function(data){
+                        var i;
+                        for ( i = 0; i < data.length; i++){
+                            data.push( {x: data[i].time, y: data[i].speed} )
+                        }
+                    },
+                    error: function(){}
+                });
+
 var ctx = document.getElementById("SpeedTimeChart");
-var myChart = new Chart(ctx, {
+var configuration = {
     type: 'line',
     data: {
         datasets: [{
@@ -17,37 +34,7 @@ var myChart = new Chart(ctx, {
             pointBackgroundColor: "rgb(8, 96, 8)",
             fill: true,
             backgroundColor: "rgba(8, 96, 8, 0.2)",
-            data: [{
-                x: 2,
-                y: 10
-            }, {
-                x: 3,
-                y: 8
-            }, {
-                x: 4,
-                y: 9
-            }, {
-                x: 5,
-                y: 7
-            },{
-                x: 6,
-                y: 10
-            }, {
-                x: 7,
-                y: 13
-            },{
-                x: 8,
-                y: 15
-            }, {
-                x: 9,
-                y: 17
-            },{
-                x: null,
-                y: null
-            },{
-                x: null,
-                y: null
-            },]
+            data: data
         }]
     },
     options: {
@@ -102,7 +89,11 @@ var myChart = new Chart(ctx, {
                 duration: 900,
                 }
     }
-});
+};
+
+setTimeout(function() {
+    var myChart = new Chart(ctx, configuration);
+}, 1000);
 
 </script>
 </body>
