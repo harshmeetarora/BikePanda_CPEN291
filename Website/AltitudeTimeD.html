@@ -61,8 +61,6 @@ function reconfigure(newData, maxTime, minTime){
                         fontColor: "rgb(0, 0, 0)"
                     },
                     ticks: {
-                        // min: 0,
-                        // max: 20,
                         fontColor: "rgb(0, 0, 0)"
                     },
                     gridLines: {
@@ -77,12 +75,10 @@ function reconfigure(newData, maxTime, minTime){
     };
 }
 setInterval(function(){
-    if ( time > maxTime){
-        maxTime = maxTime + 5;
-        minTime = minTime + 5;
-    }
+    maxTime = 10 + 5 * (time/10);
+    minTime = 5 * (time/10);
 
-    reconfigure(Data);            
+    reconfigure(Data, maxTime, minTime);            
     myChart = new Chart(ctx, configuration);
 },1000);
 </script>
