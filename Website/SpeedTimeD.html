@@ -93,8 +93,8 @@ setInterval(function(){
         type: 'get',
         // data: 
         success: function(data){
-            time = data.xxxxx;
-            speed = data.yyyy;
+            time = data.time;
+            speed = data.speed;
             
         },
         error: function(){}
@@ -116,13 +116,6 @@ setInterval(function(){
         lastPlottedTime = time;
     }
 },500);
-    // if( time == previousTime){
-    //     backdoor++;
-    //     if (backDoor > 8)
-    //     break;
-    // }else {
-    //     backDoor = 0;
-    // }
 </script>
 </body>
 
