@@ -41,6 +41,7 @@
 
                   minLong = maxLong = data[0].longitude;
                   minLat = maxLat = data[0].latitude;
+		  pathCoordninates.push( new google.maps.LatLng( minLong, minLat));
                   for ( i = 1; i < data.length; i++){
                     latitude = data[i].latitude;
                     longitude = data[i].longitude;
@@ -64,6 +65,9 @@
           });
 latitude = (maxLat - minLat) / 2;
 longitude = (maxLong - minLong) / 2;
+
+
+
 function initMap() {
 setTimeout(function() {
  latLng = new google.maps.LatLng( latitude, longitude);
