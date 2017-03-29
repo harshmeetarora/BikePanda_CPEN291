@@ -65,7 +65,7 @@
           lat = (maxLat - minLat) / 2;
           long = (maxLong - minLong) / 2;
 
-      setTimeout(function initMap() {
+      function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 3,
           center: {lat: lat, lng: long},
@@ -82,7 +82,8 @@
 
         flightPath.setMap(map);
 
-    }, 1000);
+    };
+
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeasNGrKh3vL9EkHJlVEP3VhSQpk4frNU&callback=initMap"
     async defer></script>
