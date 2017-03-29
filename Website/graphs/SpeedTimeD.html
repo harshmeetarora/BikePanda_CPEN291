@@ -32,7 +32,7 @@ function reconfigure(newData, maxTime, minTime){
             },
             options: {
                 title: {
-                    display: true,
+                    display: false,
                     text: "Name, Date, Start time",
                     fontColor: "rgb(0, 0, 0)"
                 },
@@ -92,7 +92,7 @@ setInterval(function(){
         dataType:'json',
         async: 'false',
         type: 'get',
-        // data: 
+        data: { tripid: tripID},
         success: function(data){
             time = data.time;
             speed = data.speed;
@@ -108,8 +108,8 @@ setInterval(function(){
             y: speed
         });
 
-        maxTime = time + 10;//10 + 5 * (time/10);
-        minTime = time - 90;// 5 * (time/10);
+        maxTime = Math.ceil(time + 15);
+        minTime = Math.ceil(time - 285);
 
         reconfigure(Data, maxTime, minTime);            
         myChart = new Chart(ctx, configuration);

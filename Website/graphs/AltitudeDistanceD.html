@@ -7,7 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 <body>
-    <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
+    <canvas id="AltitudeDistanceDChart" width="400" height="200"></canvas>
 <script>
 var myChart;
 var freshData = [];
@@ -15,8 +15,10 @@ var configuration;
 var altitude;
 var lastPlottedDistance;
 var distance;
-var ctx = document.getElementById("SpeedTimeChart");
-function reconfigure(newData){
+var minDistance;
+var maxDistance;
+var ctx = document.getElementById("AltitudeDistanceDChart");
+function reconfigure(newData, minDistance, maxDistance){
     configuration = {
             type: 'line',
             data: {
@@ -24,13 +26,13 @@ function reconfigure(newData){
                     borderColor: "rgb(8, 96, 8)",
                     pointBackgroundColor: "rgb(8, 96, 8)",
                     fill: true,
-                    backgroundColor: "rgba(8, 96, 8, 0.2)",
+                    backgroundColor: "rgba(8, 96, 8, 0.3)",
                     data: newData
                 }]
             },
             options: {
                 title: {
-                    display: true,
+                    display: false,
                     text: "Name, Date, Start time",
                     fontColor: "rgb(0, 0, 0)"
                 },
@@ -43,10 +45,12 @@ function reconfigure(newData){
                         position: "bottom",
                         scaleLabel: {
                             display: true,
-                            labelString: "Distance traveled in km",
+                            labelString: "Distance traveled in m",
                             fontColor: "rgb(0, 0, 0)"
                         },
                         ticks: {
+                            min: minDistance,
+                            max: maxDistance,
                             fontColor: "rgb(0, 0, 0)"
                         },
                     
@@ -86,7 +90,7 @@ setInterval(function(){
         dataType:'json',
         async: 'false',
         type: 'get',
-        data: { tripid: 54},
+        data: { tripid: tripID},
         success: function(data){
             distance = data.distance;
             altitude = data.altitude;
@@ -101,6 +105,8 @@ setInterval(function(){
             x: distance,
             y: altitude
         });
+        minDistance = Math.ceil(distance - 450);
+        maxDistance = Math.ceil(distance + 50);
 
         reconfigure(freshData);            
         myChart = new Chart(ctx, configuration);
