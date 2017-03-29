@@ -28,11 +28,7 @@
       var lastPlottedLongitude;
 
     function reconfigure(pathCoordninates){
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 3,
-            center: latLng,
-            mapTypeId: 'terrain'
-        });
+           
 
         var flightPath = new google.maps.Polyline({
             path: pathCoordninates,
@@ -48,6 +44,12 @@
           
 
 function initMap() {
+     map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: latLng,
+            mapTypeId: 'terrain'
+        });
+
     setInterval(function() {
         $.ajax(
                     {
@@ -66,11 +68,7 @@ function initMap() {
         if ( latitude != lastPlottedLatitude && longitude != lastPlottedLongitude){
             latLng = new google.maps.LatLng(latitude, longitude);
             pathCoordninates.push(latLng);
-
-
-            reconfigure(pathCoordninates);            
-            myChart = new Chart(ctx, configuration);
-
+            reconfigure(pathCoordninates);
             lastPlottedLongitude = longitude;
             lastPlottedLatitude = latitude;
             map.setCenter(latLng);
