@@ -29,7 +29,7 @@ function reconfigure(newData, maxTime, minTime){
         },
         options: {
             title: {
-                display: true,
+                display: false,
                 text: "Altitude(meters) vs. Time(minutes)",
                 fontColor: "rgb(0, 0, 0)"
             },
@@ -42,7 +42,7 @@ function reconfigure(newData, maxTime, minTime){
                     position: "bottom",
                     scaleLabel: {
                         display: true,
-                        labelString: "Time in minutes",
+                        labelString: "Time in seconds",
                         fontColor: "rgb(0, 0, 0)"
                     },
                     ticks: {
@@ -85,7 +85,7 @@ setInterval(function(){
         async: 'false',
         type: 'get',
         success: function(data){
-            // data:
+            data: {tripid: tripID}
             time = data.xxxxx;
             altitude = data.yyyy;
             
@@ -100,8 +100,8 @@ setInterval(function(){
             y: altitude
         });
 
-        maxTime = 10 + 5 * (time/10);
-        minTime = 5 * (time/10);
+        maxTime = Math.ceil(time + 15);
+        minTime = Math.ceil( time - 285);
 
         reconfigure(Data, maxTime, minTime);            
         myChart = new Chart(ctx, configuration);
