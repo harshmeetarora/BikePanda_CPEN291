@@ -131,6 +131,7 @@ var time;
 var lastPlottedTime;
 var speed;
 var distance;
+var calories;
 var minTime;
 var minTime;
 var ctx = document.getElementById("SpeedTimeChart");
@@ -212,6 +213,7 @@ setInterval(function(){
         success: function(data){
             $('.speed').text(speed=data.speed);
             $('.distance').text(speed=data.distance);
+            $('.calories').text(speed=data.calories);
             time = data.time;
           
             
@@ -274,7 +276,7 @@ setInterval(function(){
                             <h3 class="panel-title">Calories</h3>
                         </div>
                         <div class="panel-body">
-                        Val 3
+                            <span class="calories"></span>
                         </div>
                     </div>
                     
