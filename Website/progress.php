@@ -33,8 +33,8 @@
 		}
     </style>
     
-    <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
-    
+    <script src="./js/chart.js/dist/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   </head>
     
   <body>
@@ -49,30 +49,33 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="./index.html">Bike Panda</a>
+		  <a class="navbar-brand" href="./index.php">Bike Panda</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		  <ul class="nav navbar-nav">
-			<li><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
+			<li><a href="./index.php">Home<span class="sr-only">(current)</span></a></li>
 		  </ul>
           <ul class="nav navbar-nav navbar-right">  
-			<li>
-                <?php if(isset($_SESSION['id'])): ?>
-                    <a href="./login.html">Log in<span class="sr-only">(current)</span></a>
-                <?php else: ?>
-                    <a href="./index.html">Log out<span class="sr-only">(current)</span></a>
-                <?php endif; ?>
-            </li>
+                    <li><a href="./logout.php">Log out<span class="sr-only">(current)</span></a></li>
 		  </ul> 
 		  <ul class="nav navbar-nav navbar-right">
-			<li><a href="./about.html">About Us</a></li>
+			<li><a href="./about.php">About Us</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
      </div><!-- /.container-fluid -->
 	</nav>
+ 
+
+   <!--  <script type="text/javascript">
+        $(document).ready(function(){
+          $('#testlink').text() = "ABC";
+         });   
+    </script> -->
+
     
+
     <!-- GRID CONTAINING THE GRAPH AND RELEVANT INFORMATION -->
     <div class="container-fluid text-center" >
         <div class="row" >
@@ -87,10 +90,31 @@
                     <hr>
                     <ul class="list-group">
                         <li class="list-group-item list-group-item-info"><b>Past Trips</b></li>
-                        <a href="#" class="list-group-item">Date 1</a>
-                        <a href="#" class="list-group-item">Date 2</a>
-                        <a href="#" class="list-group-item">Date 3</a>
-                        <a href="#" class="list-group-item">Date 4</a>
+
+                        <a href="#" class="list-group-item" id="date1"></a>
+                        <a href="#" class="list-group-item" id="date2"></a>
+                        <a href="#" class="list-group-item" id="date3"></a>
+                        <a href="#" class="list-group-item" id="date4"></a>
+
+                        <script type="text/javascript">
+                            var omarTime = "";
+                            //var poll = function(){
+                            $.ajax(
+                            {
+                                url:'./getdatefromdb.php',//php,
+                                dataType:'json',
+                                type: 'GET',
+                                //async
+                                success: function(data){
+                                    $('#date1').text(data[0].time0);
+                                    $('#date2').text(data[1].time1);
+                                    $('#date3').text(data[2].time2);
+                                    $('#date4').text(data[3].time3);
+                                },
+                                error: function(){}
+                                });
+                            //};
+                        </script>
                     </ul>
                 </div>
                 </div>
@@ -195,7 +219,7 @@
                     <!-- PANELS -->  
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Data 1</h3>
+                            <h3 class="panel-title">Speed</h3>
                         </div>
                         <div class="panel-body">
                         Val 1
@@ -213,7 +237,7 @@
                     <hr>
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Data 3</h3>
+                            <h3 class="panel-title">Distance</h3>
                         </div>
                         <div class="panel-body">
                         Val 3
@@ -222,7 +246,7 @@
                     <hr>
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Data 4</h3>
+                            <h3 class="panel-title">Calories</h3>
                         </div>
                         <div class="panel-body">
                         Val 4
@@ -231,6 +255,5 @@
                 </div>
         </div>
     </div>
-    
     
 </body>    
