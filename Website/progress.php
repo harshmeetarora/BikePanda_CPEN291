@@ -33,8 +33,8 @@
 		}
     </style>
     
-    <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
-    
+    <script src="./js/chart.js/dist/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   </head>
     
   <body>
@@ -49,30 +49,33 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="./index.html">Bike Panda</a>
+		  <a class="navbar-brand" href="./index.php">Bike Panda</a>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		  <ul class="nav navbar-nav">
-			<li><a href="./index.html">Home<span class="sr-only">(current)</span></a></li>
+			<li><a href="./index.php">Home<span class="sr-only">(current)</span></a></li>
 		  </ul>
           <ul class="nav navbar-nav navbar-right">  
-			<li>
-                <?php if(isset($_SESSION['id'])): ?>
-                    <a href="./login.html">Log in<span class="sr-only">(current)</span></a>
-                <?php else: ?>
-                    <a href="./index.html">Log out<span class="sr-only">(current)</span></a>
-                <?php endif; ?>
-            </li>
+                    <li><a href="./logout.php">Log out<span class="sr-only">(current)</span></a></li>
 		  </ul> 
 		  <ul class="nav navbar-nav navbar-right">
-			<li><a href="./about.html">About Us</a></li>
+			<li><a href="./about.php">About Us</a></li>
 		  </ul>
 		</div><!-- /.navbar-collapse -->
      </div><!-- /.container-fluid -->
 	</nav>
+ 
+
+   <!--  <script type="text/javascript">
+        $(document).ready(function(){
+          $('#testlink').text() = "ABC";
+         });   
+    </script> -->
+
     
+
     <!-- GRID CONTAINING THE GRAPH AND RELEVANT INFORMATION -->
     <div class="container-fluid text-center" >
         <div class="row" >
@@ -87,10 +90,31 @@
                     <hr>
                     <ul class="list-group">
                         <li class="list-group-item list-group-item-info"><b>Past Trips</b></li>
-                        <a href="#" class="list-group-item">Date 1</a>
-                        <a href="#" class="list-group-item">Date 2</a>
-                        <a href="#" class="list-group-item">Date 3</a>
-                        <a href="#" class="list-group-item">Date 4</a>
+
+                        <a href="#" class="list-group-item" id="date1"></a>
+                        <a href="#" class="list-group-item" id="date2"></a>
+                        <a href="#" class="list-group-item" id="date3"></a>
+                        <a href="#" class="list-group-item" id="date4"></a>
+
+                        <script type="text/javascript">
+                            var omarTime = "";
+                            //var poll = function(){
+                            $.ajax(
+                            {
+                                url:'./getdatefromdb.php',//php,
+                                dataType:'json',
+                                type: 'GET',
+                                //async
+                                success: function(data){
+                                    $('#date1').text(data[0].time0);
+                                    $('#date2').text(data[1].time1);
+                                    $('#date3').text(data[2].time2);
+                                    $('#date4').text(data[3].time3);
+                                },
+                                error: function(){}
+                                });
+                            //};
+                        </script>
                     </ul>
                 </div>
                 </div>
@@ -98,86 +122,120 @@
             
             <!-- PLACE GRAPH HERE -->
             <div class="col-md-8 col-sm-8" style="margin-top:20px">    
-            <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
-            <script>
-            var ctx = document.getElementById("SpeedTimeChart");
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    datasets: [{
-                        borderColor: "rgb(28, 103, 3)",
-                        pointBackgroundColor: "rgba(28, 103, 3)",
-                        fill: false,
-                        data: [{
-                            x: 2,
-                            y: 10
-                        }, {
-                            x: 3,
-                            y: 8
-                        }, {
-                            x: 4,
-                            y: 9
-                        }, {
-                            x: 5,
-                            y: 7
-                        },{
-                            x: 6,
-                            y: 10
-                        }, {
-                            x: 7,
-                            y: 13
-                        },{
-                            x: 8,
-                            y: 15
-                        }, {
-                            x: 9,
-                            y: 17
-                        },{
-                            x: 10,
-                            y: 19
-                        }]
-                    }]
+                <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
+<script>
+var myChart;
+var Data = [];
+var configuration;
+var time;
+var lastPlottedTime;
+var speed;
+var distance;
+var minTime;
+var minTime;
+var ctx = document.getElementById("SpeedTimeChart");
+function reconfigure(newData, maxTime, minTime){
+    configuration = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    borderColor: "rgb(8, 96, 8)",
+                    pointBackgroundColor: "rgb(8, 96, 8)",
+                    fill: true,
+                    backgroundColor: "rgba(8, 96, 8, 0.2)",
+                    data: newData
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Name, Date, Start time",
+                    fontColor: "rgb(0, 0, 0)"
                 },
-                options: {
-                    title:{
-                         display: true,
-                        text: "Speed(km/h) vs. Time(min)"
-                    },
-                    legend:{
-                        display: false
-                    },
-                    scales: {
-                        xAxes: [{
-                            type: 'linear',
-                            position: 'bottom',
-                            scaleLabel: {
-                                display: true,
-                                labelString: "something in here"
-                            },
-                            ticks: {
-                                display: true,
-                                min: 0,
-                                max: 20
-                            }
-                        }],
-                        yAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: "something else in here"
-                            },
-                            ticks: {
-                                min: 0,
-                                max: 20
-                            }
-                        }]
+                legend:{
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        type: "linear",
+                        position: "bottom",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time in minutes",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: minTime,
+                            max: maxTime,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }],
+                    yAxes: [{
+                        type: "linear",
+                        position: "left",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Speed in km/h",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: 0,
+                            max: 35,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }]
+                    
+                },
+                animation: {
+                        duration: 0,
+                        }
+            }
+        };
+}
+setInterval(function(){
 
-                    },
-                    animation: {
+    $.ajax(
+                {
+        url:'./livegraph.php',
+        dataType:'json',
+        async: 'false',
+        type: 'get',
+        // data: 
+        success: function(data){
+            $('.speed').text(speed=data.speed);
+            $('.distance').text(speed=data.distance);
+            time = data.time;
+          
+            
+        },
+        error: function(){}
+    });
 
-                    }
-                }
-            });
-            </script>
+    if ( time != lastPlottedTime){
+    
+        Data.push({
+            x: time,
+            y: speed
+        });
+
+        maxTime = time + 10;//10 + 5 * (time/10);
+        minTime = time - 90;// 5 * (time/10);
+
+        reconfigure(Data, maxTime, minTime);            
+        myChart = new Chart(ctx, configuration);
+        
+        lastPlottedTime = time;
+    }
+},1000);
+</script>
             <hr>   
                 <div class="btn-group" role="group" aria-label="...">
                   <button type="button" class="btn btn-info active">Graph1</button>
@@ -195,42 +253,33 @@
                     <!-- PANELS -->  
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Data 1</h3>
+                            <h3 class="panel-title">Speed</h3>
                         </div>
                         <div class="panel-body">
-                        Val 1
+                            <span class="speed"></span>
                         </div>
                     </div>
                     <hr>
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Data 2</h3>
+                            <h3 class="panel-title">Distance</h3>
                         </div>
                         <div class="panel-body">
-                        Val 2
+                            <span class="distance"></span>
                         </div>
                     </div>
                     <hr>
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Data 3</h3>
+                            <h3 class="panel-title">Calories</h3>
                         </div>
                         <div class="panel-body">
                         Val 3
                         </div>
                     </div>
-                    <hr>
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Data 4</h3>
-                        </div>
-                        <div class="panel-body">
-                        Val 4
-                        </div>
-                    </div>
+                    
                 </div>
         </div>
     </div>
-    
     
 </body>    
