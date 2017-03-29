@@ -15,6 +15,7 @@
       }
     </style>
   </head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <body>
     <div id="map"></div>
     <script>
@@ -24,67 +25,88 @@
       var maxLong;
       var minLat;
       var maxLat;
-      var lat;
-      var long;
-
+      var latitude = 0;
+      var longitude = 0;
+      var latLng = 0;
       $.ajax(
           {
-              url:'./get_user_data.php',
+              url:'./staticmapsdata.php',
               dataType:'json',
               async: 'false',
               type: 'get',
-              data: { tripid: 54},
+              data: { tripid: 1},
 
               success: function(data){
                   var i;
 
-                  minLong = maxLong = lng[0].longitude;
+                  minLong = maxLong = data[0].longitude;
                   minLat = maxLat = data[0].latitude;
                   for ( i = 1; i < data.length; i++){
-                    lat = data[i].latitude;
-                    long = data[i].longitude;
+                    latitude = data[i].latitude;
+                    longitude = data[i].longitude;
 
-                    if(lat < minLat){
-                    minLat = lat;
+                    if(latitude < minLat){
+			    minLat = latitude;
                     }
-                    if (lat > maxLat){
-                    maxLat = lat;
+                    if (latitude > maxLat){
+			    maxLat = latitude;
                     }
-                    if (long < minLong){
-                    minLong = long;
+                    if (longitude < minLong){
+			    minLong = longitude;
                     }
-                    if (long > maxLong){
-                    maxLong = long;
+                    if (longitude > maxLong){
+			    maxLong = longitude;
                     }
-                    pathCoordninates.push( {lat: lat, lng: long} );
+                   pathCoordninates.push( new google.maps.LatLng( latitude, longitude));
                   }
               },
               error: function(){}
           });
+latitude = (maxLat - minLat) / 2;
+longitude = (maxLong - minLong) / 2;
+function initMap() {
+setTimeout(function() {
+ latLng = new google.maps.LatLng( latitude, longitude);
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 3,
+    center: latLng,
+    mapTypeId: 'terrain'
+  });
 
-          lat = (maxLat - minLat) / 2;
-          long = (maxLong - minLong) / 2;
+  var flightPath = new google.maps.Polyline({
+    path: pathCoordninates,
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
 
-      setTimeout(function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 3,
-          center: {lat: lat, lng: long},
-          mapTypeId: 'terrain'
-        });
+  flightPath.setMap(map);
+}, 1000);
+}
+/*    function initMap() {
 
-        var flightPath = new google.maps.Polyline({
-          path: pathCoordninates,
-          geodesic: true,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2
-        });
+		latitude = (maxLat - minLat) / 2;
+		longitude = (maxLong - minLong) / 2;
 
-        flightPath.setMap(map);
+		var map = new google.maps.Map(document.getElementById('map'), {
+		  zoom: 3,
+		  center: new google.maps.LatLng( latitude, longitude),
+		  mapTypeId: 'terrain'
+		});
 
-    }, 1000);
+		var flightPath = new google.maps.Polyline({
+		  path: pathCoordninates,
+		  geodesic: true,
+		  strokeColor: '#FF0000',
+		  strokeOpacity: 1.0,
+		  strokeWeight: 2
+		});
+
+		flightPath.setMap(map);
+
+    }*/
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeasNGrKh3vL9EkHJlVEP3VhSQpk4frNU&callback=initMap"
-    async defer></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeasNGrKh3vL9EkHJlVEP3VhSQpk4frNU&callback=initMap">setTimeout(initMap(), 10000); </script>
   </body>
 </html>
