@@ -4,7 +4,7 @@ session_start();
 if(isset($_POST["firstname"], $_POST["lastname"], $_POST["username"], $_POST["email"], $_POST["password"])) 
 {     
 
-	$conn = new mysqli("localhost", "jamie", "3parj9Ld5Rs18", "test_db");
+	$conn = new mysqli("localhost", "jamie", "3parj9Ld5Rs18", "bikepanda");
 
 	if (mysqli_connect_errno()) {
 	    die("Connection failed: " . mysqli_connect_error());
@@ -35,7 +35,9 @@ if(isset($_POST["firstname"], $_POST["lastname"], $_POST["username"], $_POST["em
 	$stmt->close();
 	$conn->close();
 
-	header( 'Location: ./progress.html' );
+	$_SESSION["id"]=$username;
+	
+	header( 'Location: ./progress.php' );
 } else {
 	echo "post parameters not set";
 }

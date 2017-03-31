@@ -3,107 +3,122 @@
 
 <head>
     <title>Speed vs Time Graph</title>
-    <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
+    <script src="./js/chart.js/dist/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 <body>
     <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
 <script>
+var myChart;
+var Data = [];
+var configuration;
+var time;
+var lastPlottedTime;
+var speed;
+var minTime;
+var minTime;
 var ctx = document.getElementById("SpeedTimeChart");
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        datasets: [{
-            borderColor: "rgb(8, 96, 8)",
-            pointBackgroundColor: "rgb(8, 96, 8)",
-            fill: true,
-            backgroundColor: "rgba(8, 96, 8, 0.2)",
-            data: [{
-                x: 2,
-                y: 10
-            }, {
-                x: 3,
-                y: 8
-            }, {
-                x: 4,
-                y: 9
-            }, {
-                x: 5,
-                y: 7
-            },{
-                x: 6,
-                y: 10
-            }, {
-                x: 7,
-                y: 13
-            },{
-                x: 8,
-                y: 15
-            }, {
-                x: 9,
-                y: 17
-            },{
-                x: null,
-                y: null
-            },{
-                x: null,
-                y: null
-            },]
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: "Name, Date, Start time",
-            fontColor: "rgb(0, 0, 0)"
-        },
-        legend:{
-            display: false
-        },
-        scales: {
-            xAxes: [{
-                type: "linear",
-                position: "bottom",
-                scaleLabel: {
-                    display: true,
-                    labelString: "Time in minutes",
+function reconfigure(newData, maxTime, minTime){
+    configuration = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    borderColor: "rgb(10, 35, 117)",
+                    pointBackgroundColor: "rgb(10, 35, 117)",
+                    fill: true,
+                    backgroundColor: "rgba(10, 35, 117, 0.3)",
+                    data: newData
+                }]
+            },
+            options: {
+                title: {
+                    display: false,
+                    text: "Name, Date, Start time",
                     fontColor: "rgb(0, 0, 0)"
                 },
-                ticks: {
-                    min: 0,
-                    max: 20,
-                    fontColor: "rgb(0, 0, 0)"
+                legend:{
+                    display: false
                 },
-            
-                gridLines: {
-                    zeroLineColor: "rgb(0, 0, 0)"
-                }
-            }],
-            yAxes: [{
-                type: "linear",
-                position: "left",
-                scaleLabel: {
-                    display: true,
-                    labelString: "Speed in km/h",
-                    fontColor: "rgb(0, 0, 0)"
+                scales: {
+                    xAxes: [{
+                        type: "linear",
+                        position: "bottom",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time in minutes",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: minTime,
+                            max: maxTime,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }],
+                    yAxes: [{
+                        type: "linear",
+                        position: "left",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Speed in km/h",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: 0,
+                            max: 35,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }]
+                    
                 },
-                ticks: {
-                    min: 0,
-                    max: 20,
-                    fontColor: "rgb(0, 0, 0)"
-                },
-            
-                gridLines: {
-                    zeroLineColor: "rgb(0, 0, 0)"
-                }
-            }]
+                animation: {
+                        duration: 0,
+                        }
+            }
+        };
+}
+setInterval(function(){
+
+    $.ajax(
+                {
+        url:'./livegraph.php',
+        dataType:'json',
+        async: 'false',
+        type: 'get',
+        data: { tripid: tripID},
+        success: function(data){
+            time = data.time;
+            speed = data.speed;
             
         },
-        animation: {
-                duration: 0,
-                }
+        error: function(){}
+    });
+
+    if ( time != lastPlottedTime){
+    
+        Data.push({
+            x: time,
+            y: speed
+        });
+
+        maxTime = Math.ceil(time + 15);
+        minTime = Math.ceil(time - 285);
+
+        reconfigure(Data, maxTime, minTime);            
+        myChart = new Chart(ctx, configuration);
+        
+        lastPlottedTime = time;
     }
-});
+},1000);
 </script>
 </body>
 
 </html>
+

@@ -94,18 +94,20 @@
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
 		  </button>
-		  <a class="navbar-brand" href="./index.html"><img class="navlogo" src="./images/BikePandaLogo.png"></a>
-		  <a class="navbar-brand" href="./index.html">Bike Panda</a>
+		  <a class="navbar-brand" href="./index.php"><img class="navlogo" src="./images/BikePandaLogo.png"></a>
+		  <a class="navbar-brand" href="./index.php">Bike Panda</a>
 		</div>
 
-            <form class="navbar-form navbar-nav navbar-right">
+          
+        
+            <form action="./login.php" method="post" class="navbar-form navbar-nav navbar-right">
             <div class="form-group">
                 <!--<label>Password</label>-->
-                <input type="text" class="form-control" placeholder="Username or email">
+                <input type="text" name="username" class="form-control" placeholder="Username or email">
             </div>
             <div class="form-group">
                 <!--<label>Password</label>-->
-                <input type="password" class="form-control" placeholder="Password">
+                <input type="password" name="password" class="form-control" placeholder="Password">
             </div>    
             <button type="submit" class="btn btn-default">Login</button>    
             </form>    
@@ -114,9 +116,10 @@
        <!-- <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1"> -->
 		  
           <ul class="nav navbar-nav navbar-right">
-			<li><a href="./about.html">About Us</a></li>
+			<li><a href="./about.php">About Us</a></li>
 		  </ul>
-		</div><!-- /.navbar-collapse --><!-- /.container-fluid -->
+		</div><!-- /.navbar-collapse -->
+	
 	</nav>
 
 
@@ -124,7 +127,7 @@
     <!-- BreadCrumb -->
     <div class="container">
                 <ol class="breadcrumb">
-                  <li><a href="./index.html">Home</a></li>
+                  <li><a href="./index.php">Home</a></li>
                   <li class="active">Account</li>
                 </ol>
 
@@ -134,40 +137,39 @@
 	<div class="jumbotron text-center">
 	  <div class="container">
           <div class="row">
-              <div class="col-md-1 col-sm-1 col-lg-1"></div>
               <div class="col-md-5 col-sm-5 col-lg-5" >
-                  <h2 style="margin-top:0px">Sign Up</h2>
-                      <hr>
-                        <div class="container">
-                        <div class="row">
+              <h2 style="margin-top:0px">Sign Up</h2>
+                 <hr>
+                    <div class="container">
+                        <form action="./signup.php" method="post" class="form" >
+			    <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control input-lg" placeholder="First Name">
+                                    <input type="text" name="firstname" class="form-control input-lg" placeholder="First Name">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control input-lg" placeholder="Last Name">
+                                    <input type="text" name="lastname" class="form-control input-lg" placeholder="Last Name">
                                 </div>
                            </div>
-                        </div>
-                        <form class="form">
+                           </div>
                             <div class="form-group">
                                 <div class="input-group">
                                   <span class="input-group-addon" id="basic-addon1">@</span>
-                                  <input type="text" class="form-control input-lg" placeholder="Username" aria-describedby="basic-addon1">
+                                  <input type="text" name="username" class="form-control input-lg" placeholder="Username" aria-describedby="basic-addon1">
                                 </div>
                             </div>
                             <!-- Enter email -->
-                            <div class="form-group"	>
+                            <div class="form-group">
                                 <!--<label>Password</label>-->
-                                <input type="email" class="form-control input-lg" placeholder="Email">
+                                <input type="email" name="email" class="form-control input-lg" placeholder="Email">
                             </div>
 
                             <!-- Enter password -->
                             <div class="form-group"	>
                                 <!--<label>Password</label>-->
-                                <input type="password" class="form-control input-lg" placeholder="Password">
+                                <input type="password" name="password" class="form-control input-lg" placeholder="Password">
                             </div>
 
                             <!-- Log In Button -->
@@ -176,12 +178,14 @@
                     </div>
               </div>
               <div class="col-md-1 col-sm-1 col-lg-1"></div>
-              <div class="col-md-4 col-sm-4 col-lg-4">
+              <div class="col-md-5 col-sm-5 col-lg-5">
                 <h2 style="margin-top:0px">Begin Your Journey Here</h2>
                 <hr>
-                <p>Insert Some Bullshit Information Here</p>
+               
+                <img class="thumbnail" src="./bikey.jpg" style="width: 100%;max-height: 100%">
+                  
              </div>
-             <div class="col-md-1 col-sm-1 col-lg-1"></div>
+             
         </div>
 	  </div>
 	</div>

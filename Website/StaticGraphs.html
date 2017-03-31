@@ -1,0 +1,289 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Speed vs Time Graph</title>
+    <script src="./js/chart.js/dist/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body>
+    <canvas id="window" width="400" height="200"></canvas>
+<script>
+    var myChart;
+    var ctx = document.getElementById("window");
+    var SpeedTime = 1;
+    var AltitudeDistance = 0;
+    var MapAPI = 0;
+
+function initChart(){
+    if (SpeedTime){
+        var responseData;
+        $.ajax(
+                    {
+                        url:'./speedvstime.php',
+                        dataType:'json',
+                        async: 'false',
+                        type: 'get',
+                        data: {tripid: tripID},
+                        success: function(data){
+                            var i;
+                            for ( i = 0; i < data.length - 1; i++){
+                                    responseData.push( {x: data[i].time, y: data[i].speed} )
+                            }
+                            
+                        },
+                        error: function(){}
+                    });
+
+
+        var configurationSpeedTime = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    borderColor: "rgb(10, 35, 117)",
+                    pointBackgroundColor: "rgb(10, 35, 117)",
+                    fill: true,
+                    backgroundColor: "rgba(10, 35, 117, 0.2)",
+                    data: responseData
+                }]
+            },
+            options: {
+                title: {
+                    display: false,
+                    text: startTime,
+                    fontColor: "rgb(0, 0, 0)"
+                },
+                legend:{
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        type: "linear",
+                        position: "bottom",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time in minutes",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: 0,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }],
+                    yAxes: [{
+                        type: "linear",
+                        position: "left",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Speed in km/h",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: 0,
+                            max: 35,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }]
+                    
+                },
+                animation: {
+                        duration: 900,
+                        }
+            }
+        };
+        setTimeout(function() {
+            myChart = new Chart(ctx, configurationSpeedTime);
+        }, 1000);
+
+    }  else if (AltitudeDistance){
+        var freshData;
+        $.ajax(
+                    {
+                        url:'./altitudevsdistance.php',
+                        dataType:'json',
+                        async: 'false',
+                        type: 'get',
+                        data: { tripid: tripID},
+                        success: function(data){
+                            var i;
+                            for ( i = 0; i < data.length - 1; i++){
+                                freshData.push( {x: data[i].distance, y: data[i].altitude} )
+                            }
+                        },
+                        error: function(){}
+                    });
+        var configurationAltitudeDistance = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    borderColor: "rgb(8, 96, 8)",
+                    pointBackgroundColor: "rgb(8, 96, 8)",
+                    fill: true,
+                    backgroundColor: "rgba(8, 96, 8, 0.2)",
+                    data: freshData
+                }]
+            },
+            options: {
+                title: {
+                    display: false,
+                    text: "Name, Date, Start time",
+                    fontColor: "rgb(0, 0, 0)"
+                },
+                legend:{
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        type: "linear",
+                        position: "bottom",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Distance in m",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: 0,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }],
+                    yAxes: [{
+                        type: "linear",
+                        position: "left",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Altitude in m",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }]
+                    
+                },
+                animation: {
+                        duration: 900,
+                        }
+            }
+        };
+        setTimeout(function() {
+            myChart = new Chart(ctx, configurationAltitudeDistance);
+        }, 1000);
+    } else if (MapAPI){
+        var pathCoordninates = [];
+        var minLong;
+        var maxLong;
+        var minLat;
+        var maxLat;
+        var latitude = 0;
+        var longitude = 0;
+        var latLng = 0;
+        $.ajax(
+            {
+                url:'./staticmapsdata.php',
+                dataType:'json',
+                async: 'false',
+                type: 'get',
+                data: { tripid: tripID},
+
+                success: function(data){
+                    var i;
+
+                    minLong = maxLong = data[0].longitude;
+                    minLat = maxLat = data[0].latitude;
+                    pathCoordninates.push( new google.maps.LatLng( minLong, minLat));
+                    for ( i = 1; i < data.length; i++){
+                        latitude = data[i].latitude;
+                        longitude = data[i].longitude;
+
+                        if(latitude < minLat){
+                        minLat = latitude;
+                        }
+                        if (latitude > maxLat){
+                        maxLat = latitude;
+                        }
+                        if (longitude < minLong){
+                        minLong = longitude;
+                        }
+                        if (longitude > maxLong){
+                        maxLong = longitude;
+                        }
+                        pathCoordninates.push( new google.maps.LatLng( latitude, longitude));
+                    }
+                },
+                error: function(){}
+            });
+
+        latitude = (maxLat - minLat) / 2;
+        longitude = (maxLong - minLong) / 2;
+
+        setTimeout(function() {
+            latLng = new google.maps.LatLng( latitude, longitude);
+            myChart = new google.maps.Map(ctx, {
+                zoom: 3,
+                center: latLng,
+                mapTypeId: 'terrain'
+            });
+
+            var Path = new google.maps.Polyline({
+                path: pathCoordninates,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+            Path.setMap(myChart);
+        }, 1000);
+    }   
+};
+
+function getSpeedGraphUp(){
+    SpeedTime = 1;
+    AltitudeDistance = 0;
+    MapAPI = 0;
+    initChart();
+
+};
+function getAltitudeGraphUp(){
+    SpeedTime = 0;
+    AltitudeDistance = 1;
+    MapAPI = 0;
+    initChart();
+
+};
+function getMapAPIgoing(){
+    SpeedTime = 0;
+    AltitudeDistance = 0;
+    MapAPI = 1;
+    initChart();
+
+};
+document.getElementById("speedtimebutton").onclick = function() {getSpeedGraphUp()};
+document.getElementById("altdistancebutton").onclick = function() {getAltitudeGraphUp()};
+document.getElementById("mapbutton").onclick = function() {getMapAPIgoing()};
+
+
+
+
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeasNGrKh3vL9EkHJlVEP3VhSQpk4frNU&callback=initChart"> </script>
+</body>
+
+</html>
+

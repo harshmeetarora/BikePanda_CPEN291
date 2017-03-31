@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      #map {
+        height: 100%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      var pathCoordninates = [];
+      var centerLatitude = 49.2606;
+      var centerLongitude = -123.2460;
+      var centerLatLng = {lat: centerLatitude, lng: centerLongitude};
+
+      var lastPlottedLatitude;
+      var lastPlottedLongitude;
+
+    function reconfigure(pathCoordninates){
+           
+
+        var flightPath = new google.maps.Polyline({
+            path: pathCoordninates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+
+        flightPath.setMap(map);
+    }
+      
+          
+
+function initMap() {
+     map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: centerLatLng,
+            mapTypeId: 'terrain'
+        });
+
+    setInterval(function() {
+        $.ajax({
+            url:'./livemapsdata.php',
+            dataType:'json',
+            async: 'false',
+            type: 'get',
+            success: function(data){
+		if (data.latitude != 0.0 && data.longitude != 0.0){
+			var latitude = data.latitude;
+			var longitude = data.longitude;
+			var latLng = new google.maps.LatLng(latitude, longitude);
+			pathCoordninates.push(latLng);
+		        reconfigure(pathCoordninates);
+		}
+            },
+            error: function(){}
+        });
+    }, 1000);
+}
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeasNGrKh3vL9EkHJlVEP3VhSQpk4frNU&callback=initMap"> </script>
+  </body>
+</html>

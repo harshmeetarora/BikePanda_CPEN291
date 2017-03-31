@@ -3,57 +3,48 @@
 
 <head>
     <title>Speed vs Time Graph</title>
-    <script src="/usr/local/lib/node_modules/chart.js/dist/Chart.js"></script>
+    <script src="./js/chart.js/dist/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 <body>
     <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
 <script>
+var startTime = '';
+var responseData = [];
+ $.ajax(
+                {
+                    url:'./speedvstime.php',
+                    dataType:'json',
+                    async: 'false',
+                    type: 'get',
+                    data: {tripid: 1013},
+                    success: function(data){
+                        var i;
+                        for ( i = 0; i < data.length; i++){
+                            	responseData.push( {x: data[i].time, y: data[i].speed} )
+                        }
+			// startTime =  data[i].start_time;
+						
+                    },
+                    error: function(){}
+                });
+
 var ctx = document.getElementById("SpeedTimeChart");
-var myChart = new Chart(ctx, {
+var configuration = {
     type: 'line',
     data: {
         datasets: [{
-            borderColor: "rgb(8, 96, 8)",
-            pointBackgroundColor: "rgb(8, 96, 8)",
+            borderColor: "rgb(10, 35, 117)",
+            pointBackgroundColor: "rgb(10, 35, 117)",
             fill: true,
-            backgroundColor: "rgba(8, 96, 8, 0.2)",
-            data: [{
-                x: 2,
-                y: 10
-            }, {
-                x: 3,
-                y: 8
-            }, {
-                x: 4,
-                y: 9
-            }, {
-                x: 5,
-                y: 7
-            },{
-                x: 6,
-                y: 10
-            }, {
-                x: 7,
-                y: 13
-            },{
-                x: 8,
-                y: 15
-            }, {
-                x: 9,
-                y: 17
-            },{
-                x: null,
-                y: null
-            },{
-                x: null,
-                y: null
-            },]
+            backgroundColor: "rgba(10, 35, 117, 0.2)",
+            data: responseData
         }]
     },
     options: {
         title: {
-            display: true,
-            text: "Name, Date, Start time",
+            display: false,
+            text: startTime,
             fontColor: "rgb(0, 0, 0)"
         },
         legend:{
@@ -70,7 +61,6 @@ var myChart = new Chart(ctx, {
                 },
                 ticks: {
                     min: 0,
-                    max: 20,
                     fontColor: "rgb(0, 0, 0)"
                 },
             
@@ -88,7 +78,7 @@ var myChart = new Chart(ctx, {
                 },
                 ticks: {
                     min: 0,
-                    max: 20,
+                    max: 35,
                     fontColor: "rgb(0, 0, 0)"
                 },
             
@@ -102,7 +92,11 @@ var myChart = new Chart(ctx, {
                 duration: 900,
                 }
     }
-});
+};
+setTimeout(function() {
+    var myChart = new Chart(ctx, configuration);
+}, 1000);
+
 </script>
 </body>
 
