@@ -4,7 +4,7 @@
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') != 0){
         die('Get requests only');
 }
-$conn = new mysqli("localhost", "jamie", "3parj9Ld5Rs18", "test_db");
+$conn = new mysqli("localhost", "jamie", "3parj9Ld5Rs18", "bikepanda");
 
 /* check connection */
 if (mysqli_connect_errno()) {
@@ -16,15 +16,15 @@ if(!isset($_GET['tripid'])) {
 	die('Get request failed on parameter');
 }
 
-$longitude = 0.0;
-$latitude = 0.0;
+$longitude = 49.2607;
+$latitude = -123.2461;
 $arr = array();
 $trip_number = $_GET['tripid'];
 $trip_start = 0;
 
 
 // get the time stamp for the beginning of the trip
-if($stmt1 = $conn->prepare("SELECT MIN(time) as time FROM bikedata WHERE trip_number = ?")) {
+if($stmt1 = $conn->prepare("SELECT MIN(rowid) as rowid FROM bikedata WHERE trip_number = ?")) {
         $stmt1->bind_param("i",$trip_number);
 } else {
         die("Prepared statement failed failed: " . $conn->error_list);

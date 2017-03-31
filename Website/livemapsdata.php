@@ -11,34 +11,24 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-$most_recent_point = "";
+$most_recent_point = 0;
 $time = 0;
 $latitude = 0;
 $current_trip = 0.0;
 $longitude = 0.0;
 
-if ($result = $mysqli->query("SELECT MAX(userid) as userid FROM bikedata")) {
+if ($result = $mysqli->query("SELECT MAX(rowid) as rowid FROM bikedata")) {
         while($row = $result->fetch_assoc()) {
-                $current_trip= $row["userid"];
+                $most_recent_point = $row["rowid"];
         }
         $result->free();
 } else {
     echo "Error1: " . $sql . "<br>" . $mysqli->error;
 }
 
-// userid should be changed to rowid when we migrate to the live database
-if ($result = $mysqli->query("SELECT MAX(trip_number) as trip_number FROM bikedata WHERE userid = '".$current_trip."'")) {
-        while($row = $result->fetch_assoc()) {
-                $most_recent_point = $row["trip_number"];
-        }
-        $result->free();
-} else {
-    echo "Error2: " . $sql . "<br>" . $mysqli->error;
-}
-
 
 // userid should be changed to rowid when we migrate to the live database
-if ($result = $mysqli->query("SELECT latitude, longitude FROM bikedata WHERE trip_number = '".$most_recent_point."'")) {
+if ($result = $mysqli->query("SELECT latitude, longitude FROM bikedata WHERE rowid = '".$most_recent_point."'")) {
         while($row = $result->fetch_assoc()) {
                 $longitude = $row["longitude"];
                 $latitude = $row["latitude"];

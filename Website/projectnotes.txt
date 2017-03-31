@@ -1,0 +1,9 @@
+FINISHED:
+- speed vs time dynamic
+- speed vs time static
+- altitude vs distance dynamic
+- altitude vs distance static
+- Google maps Dynamic
+- Google maps Static
+
+ for the above - the trip ID should be generated based on the button being pressed.

@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Speed vs Time Graph</title>
+    <script src="./js/chart.js/dist/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body>
+    <canvas id="AltitudeDistanceDChart" width="400" height="200"></canvas>
+<script>
+var myChart;
+var freshData = [];
+var configuration;
+var altitude;
+var lastPlottedDistance;
+var distance;
+var minDistance;
+var maxDistance;
+var ctx = document.getElementById("AltitudeDistanceDChart");
+function reconfigure(newData, minDistance, maxDistance){
+    configuration = {
+            type: 'line',
+            data: {
+                datasets: [{
+                    borderColor: "rgb(8, 96, 8)",
+                    pointBackgroundColor: "rgb(8, 96, 8)",
+                    fill: true,
+                    backgroundColor: "rgba(8, 96, 8, 0.3)",
+                    data: newData
+                }]
+            },
+            options: {
+                title: {
+                    display: false,
+                    text: "Name, Date, Start time",
+                    fontColor: "rgb(0, 0, 0)"
+                },
+                legend:{
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        type: "linear",
+                        position: "bottom",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Distance traveled in m",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            min: minDistance,
+                            max: maxDistance,
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }],
+                    yAxes: [{
+                        type: "linear",
+                        position: "left",
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Altitude in m",
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                        ticks: {
+                            fontColor: "rgb(0, 0, 0)"
+                        },
+                    
+                        gridLines: {
+                            zeroLineColor: "rgb(0, 0, 0)"
+                        }
+                    }]
+                    
+                },
+                animation: {
+                        duration: 0,
+                        }
+            }
+        };
+}
+setInterval(function(){
+
+    $.ajax(
+                {
+        url:'./livegraph.php',
+        dataType:'json',
+        async: 'false',
+        type: 'get',
+        data: { tripid: 1},
+        success: function(data){
+            distance = data.distance;
+            altitude = data.altitude;
+            
+        },
+        error: function(){}
+    });
+
+    if ( distance != lastPlottedDistance){
+    
+        freshData.push({
+            x: distance,
+            y: altitude
+        });
+        minDistance = Math.ceil(distance - 450);
+        maxDistance = Math.ceil(distance + 50);
+
+        reconfigure(freshData);            
+        myChart = new Chart(ctx, configuration);
+        
+        lastPlottedDistance = distance;
+    }
+},1000);
+</script>
+</body>
+
+</html>
+

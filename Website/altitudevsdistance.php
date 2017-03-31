@@ -54,11 +54,11 @@ $stmt2->bind_result($altitude, $trip_distance);
 
 // fetch the row values of speed and time
 while($stmt2->fetch()) {
-        array_push($arr, ['altitude' => $altitude, 'trip_distance' => $trip_distance]);
+        array_push($arr, ['altitude' => $altitude, 'distance' => $trip_distance]);
 }
 
 // add the date of the trip and send results
-array_push($arr, ["start_time" => $trip_start]);
+//array_push($arr, ["start_time" => $trip_start]);
 echo json_encode($arr);
 $stmt2->close();
 $conn->close();
