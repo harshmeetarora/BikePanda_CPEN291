@@ -42,10 +42,9 @@ $stmt1->bind_result($trip_start);
 $stmt1->fetch();
 $stmt1->close();
 
-
 // now get the rest of the data for the trip
-if($stmt2 = $conn->prepare("SELECT speed, time, altitude, trip_distance, (SELECT SUM(calories) FROM bikedata) as calories, (SELECT SUM(trip_distance) FROM bikedata) as distance, (SELECT AVG(speed) FROM bikedata) as speed FROM bikedata WHERE trip_number = ?")) {
-        $stmt2->bind_param("i",$trip_number);
+if($stmt2 = $conn->prepare("SELECT speed, time, altitude, trip_distance, (SELECT SUM(calories) FROM bikedata WHERE trip_number = ?) as calories, (SELECT MAX(trip_distance) FROM bikedata WHERE trip_number = ?) as distance, (SELECT AVG(speed) FROM bikedata WHERE trip_number = ?) as speed FROM bikedata WHERE trip_number = ?")) {
+        $stmt2->bind_param("iiii",$trip_number, $trip_number,$trip_number,$trip_number);
 } else {
         die("Prepared statement 2 failed failed: " . $conn->error_list);
 }

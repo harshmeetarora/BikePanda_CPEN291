@@ -161,12 +161,14 @@
                                 tripID = clicked_id;
 				var outgoinglink = './GoogleAPIFirstTest.php?tripId='+tripID;
 				$('#mapbutton').attr('href',outgoinglink);
+				$('#calorieheader').text('Calories (cal)');
                             }
 			    function reply_click_realtime(clicked_id)
                             {
 				if (real_time) {
 					var outgoinglink = './GoogleAPID2.html';
 					$('#mapbutton').attr('href',outgoinglink);
+					$('#calorieheader').text('Calories (W)');
 				}
                             }
                         </script>
@@ -256,7 +258,7 @@
                                     type: 'get',
                                     data: {tripid: tripID},
                                     success: function(data){
-					$('.speed').text(data[0].average_speed);
+					$('.speed').text(data[0].average_speed.toFixed(2));
                                         $('.calories').text(data[0].calories);
                                         $('.distance').text(data[0].sum_trip_distance);
                                         var i;
@@ -346,12 +348,12 @@
                                     type: 'get',
                                     data: { tripid: tripID},
                                     success: function(data){
-					$('.speed').text(data[0].average_speed);
+					$('.speed').text(data[0].average_speed.toFixed(2));
 					$('.calories').text(data[0].calories);
 					$('.distance').text(data[0].sum_trip_distance);
                                         var i;
-                                        for ( i = 0; i < data.length - 1; i++){
-                                            freshData.push( {x: data[i].distance, y: data[i].altitude} )
+                                        for ( i = 0; i < data.length; i++){
+                                            freshData.push( {x: data[i].distance, y: 100*data[i].altitude} )
                                         }
                                     },
                                     error: function(){}
@@ -531,6 +533,9 @@
             var minTime;
             var minTime;
             var ctx = document.getElementById("SpeedTimeChart");
+
+
+
             function reconfigure(newData, maxTime, minTime){
                 configuration = {
                         type: 'line',
@@ -546,7 +551,7 @@
                         options: {
                             title: {
                                 display: true,
-                                text: "Name, Date, Start time",
+                                text: "Real-time Speed vs Time",
                                 fontColor: "rgb(0, 0, 0)"
                             },
                             legend:{
@@ -609,12 +614,13 @@
                     type: 'get',
                     // data: 
                     success: function(data){
-                        $('.speed').text(speed=data.speed);
-                        $('.calories').text((speed*(3.5+(0.2581*speed*speed))/4186).toFixed(2));
-                        $('.distance').text(distance=data.distance);
-			reply_click_realtime(data.tripId);
-                        time = data.time;
-                        
+			if (real_time) {
+				$('.speed').text(data.speed.toFixed(2));
+				$('.calories').text((data.speed*(3.5+(0.2581*data.speed*data.speed))/4186).toFixed(2));
+				$('.distance').text(data.distance);
+				reply_click_realtime(data.tripId);
+				time = data.time;
+                        }
                     },
                     error: function(){}
                 });
@@ -628,10 +634,10 @@
 
                     maxTime = time + 10;//10 + 5 * (time/10);
                     minTime = time - 90;// 5 * (time/10);
-
-                    reconfigure(Data, maxTime, minTime);            
-                    myChart = new Chart(ctx, configuration);
-                    
+		    if (SpeedTime) {
+			    reconfigure(Data, maxTime, minTime);            
+			    myChart = new Chart(ctx, configuration);
+                    }
                     lastPlottedTime = time;
                 }
             },1000);
@@ -673,7 +679,8 @@
                     <hr>
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <h2 class="panel-title"><h3>Calories (W)</h3></h2>
+			    
+                            <h2 class="panel-title"><h3 id="calorieheader">Calories (W)</h3></h2>
                         </div>
                         <div class="panel-body">
                             
