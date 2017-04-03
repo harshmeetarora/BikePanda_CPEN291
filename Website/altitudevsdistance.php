@@ -54,7 +54,9 @@ $stmt2->bind_result($altitude, $trip_distance);
 
 // fetch the row values of speed and time
 while($stmt2->fetch()) {
-        array_push($arr, ['altitude' => $altitude, 'distance' => $trip_distance]);
+	if ($altitude > 1) {
+		array_push($arr, ['altitude' => $altitude, 'distance' => $trip_distance]);
+	}
 }
 
 // add the date of the trip and send results

@@ -37,8 +37,9 @@ if ($result = $mysqli->query("SELECT latitude, longitude FROM bikedata WHERE row
 } else {
     echo "Error3: " . $sql . "<br>" . $mysqli->error;
 }
-
-$arr = array('longitude' => $longitude, 'latitude' => $latitude);
-echo json_encode($arr);
+if (abs($longitude) > 1 && abs($latitude) > 1) {
+	$arr = array('longitude' => $longitude, 'latitude' => $latitude);
+	echo json_encode($arr);
+}
 $mysqli->close();
 ?>

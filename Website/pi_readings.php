@@ -26,10 +26,10 @@ $trip_id = $json_string["Trip_ID"];
 $longitude = $json_string["Longitude"];
 $latitude = $json_string["Latitude"];
 date_default_timezone_set('America/Vancouver');
+
 $time = date("Y-m-d H:i:s");
 $altitude = $json_string["Altitude"];
-$calories = intval($Bike_speed * (3.6/1.609) * ((3.509/1.609) + 0.2581*($Bike_speed * (3.6/1.609))*($Bike_speed * (3.6/1.609))));
-//echo "bike speed = ".$Bike_Speed . " trip distance = ". $distance . " total distance = ".$altitude . " time = ".$time . " trip id = ".$trip_id;
+$calories = ($Bike_Speed*(3.5+(0.2581*$Bike_Speed*$Bike_Speed))/4186;
 
 if($stmt = $conn->prepare("INSERT INTO bikedata (userid, trip_number, speed, altitude, calories, trip_distance, total_distance, latitude, longitude, time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 	$stmt->bind_param("iiddddddds", $user_id, $trip_id, $Bike_Speed, $altitude, $calories, $trip_distance, $total_distance, $latitude, $longitude, $time);
