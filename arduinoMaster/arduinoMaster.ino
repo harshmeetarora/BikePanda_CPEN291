@@ -1,10 +1,32 @@
+/* 
+ * UBC CPEN-291 G2_A_P2
+ * This portion was coded by Stefan Jauca and Sahil Mazmudar
+ * Last edit: 2 April 2017
+ *  
+ * References: 
+ *  https://www.arduino.cc/en/Reference/EEPROM
+ *  https://www.arduino.cc/en/Reference/LiquidCrystal
+ *  https://github.com/bblanchon/ArduinoJson
+ *  https://github.com/adafruit/Adafruit_GPS
+ *  https://www.arduino.cc/en/Reference/softwareSerial
+ *  https://www.arduino.cc/en/Math/H
+ *  
+ *  http://www.toptechboy.com/arduino/lesson-22-build-an-arduino-gps-tracker/
+ *  
+ *  We also used code from our very own P1, for the Hall Effect Sensor
+ *  
+ */
+
 #include <ArduinoJson.h>
 #include <LiquidCrystal.h>
 #include <EEPROM.h>
-#define hallPin A1
-#define tripSwitch 8
-#define photocell A5
-#define taillights A3
+#include <Adafruit_GPS.h>
+#include <SoftwareSerial.h>
+#include <math.h>
+
+#define hallPin A3
+#define photocell A0
+#define taillights A5
 #define interruptPin 3
 
 /*
@@ -17,7 +39,7 @@ const float pi = 3.14159;
 // on a max speed of 15m/s, min speed of 0.3m/s :
 // const unsigned long maxRPS = 15/(wheelDiameter*pi);  
 const double minRPS = 0.3/(wheelDiameter*pi); 
-const int address = 0;
+const int address = 10; // use EEPROM to keep our odometer consistent
 
 /* 
  * Global variables to display:  
@@ -26,6 +48,9 @@ int bikeSpeed = 0;  // Speed in km/h
 float totalDistance;  // units of distance: metres
 volatile float tripDistance; 
 volatile int tripID;
+double latitude; 
+double longitude;
+double altitude; 
 
 /*
  * Hidden global variables: 
@@ -35,33 +60,48 @@ char magnetFlag = 0;
 // Reset acts as an "enable pin" for debouncing the speed calculation,
 // magnetFlag can't be set to 1 unless magnetReset is 1
 char magnetReset = 0;  
-// Records when the magnet last passed the sensor,
 unsigned long lastInterrupt = 0.0; // used for calculating speed
 unsigned long lastSpeedCalc = 0.0; // used to stabilize speed calculation
 unsigned long lastPiTransmit = 0.0; // used to regulate data transmission intervals
+unsigned long lastGPScheck = 0.0; // used to regulate gps readings
+// For GPS: 
+String NMEA1;  //We will use this variable to hold our first NMEA sentence
+String NMEA2;  //We will use this variable to hold our second NMEA sentence
+char c;        //Used to read the characters spewing from the GPS module
 
 // initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(12, 11, 7, 6, 5, 4);
+SoftwareSerial gpsSerial(10, 9);
+Adafruit_GPS GPS(&gpsSerial);
 
 void setup() 
 {
   Serial.begin(9600);
+  // Initialize pins
   pinMode(hallPin, INPUT_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(tripSwitch, INPUT);
   pinMode(photocell, INPUT);
   pinMode(interruptPin, INPUT_PULLUP);
   pinMode(taillights, OUTPUT);
   attachInterrupt(digitalPinToInterrupt(interruptPin),tripCount,RISING);
-  // set up the LCD's number of columns and rows:
+
+  //Set up GPS
+  GPS.begin(9600);
+  GPS.sendCommand("$PGCMD,33,0*6D"); // Turn Off GPS Antenna Update  
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz update rate
+
+  //Set up internal memory usage: 
+  totalDistance = EEPROM.read(address);
+  tripDistance = EEPROM.read(address+10);
+  tripID = EEPROM.read(address+20);
+
+  // set up the LCD
   lcd.begin(16, 2);
-  // Print a message to the LCD.
+  // Print a welcome message to the LCD
   lcd.print("Ready to ride?");
   delay(1000);
   lcd.clear();
-  totalDistance = EEPROM.read(address);
-  tripDistance = EEPROM.read(address+1);
-  tripID = EEPROM.read(address+2);
   updateLCD();
 }
 
@@ -70,13 +110,27 @@ void loop()
   checkForMagnet();
   updateDistances();
   updateBikeSpeed();
+  // Logic for the taillights: 
   if(analogRead(photocell) < 500) {
     digitalWrite(taillights, HIGH);
   } else {
     digitalWrite(taillights, LOW); // updateTaillights();
-  }
+  } 
   magnetFlag ? digitalWrite(LED_BUILTIN, HIGH) : digitalWrite(LED_BUILTIN, LOW);
-  if( millis()-lastPiTransmit > 2000)
+  // Enter GPS portion: 
+  if(millis()-lastGPScheck > 20000){
+    readGPS();
+    checkForMagnet(); 
+    updateDistances();
+    updateBikeSpeed();
+    if(GPS.fix==1){
+      latitude = convertDegMinToDecDeg(GPS.latitude);
+      longitude = -1.0*convertDegMinToDecDeg(GPS.longitude);
+      altitude = GPS.altitude/100.0;
+    }
+  } 
+  // Send data to Pi once every 2 seconds
+  if(millis()-lastPiTransmit > 2000)
     sendToPi();
 }
 
@@ -120,23 +174,28 @@ void updateLCD()
 void updateBikeSpeed()
 {
   long period = millis()-lastInterrupt;
+  // If there is no magnet when we are checking, we do nothing 
   if(!magnetFlag){
+    // unless the time interval since the last magnet detection is 
+    // long enough to indicate we are stopped, set speed to zero 
     if(period>(1000.0/minRPS/numMagnets))
     { 
       bikeSpeed=0;
-      if(millis() - lastSpeedCalc > 200){
+      if(millis() - lastSpeedCalc > 200){ // don't update lcd too frequently
          updateLCD();
-         lastSpeedCalc = millis();
+         lastSpeedCalc = millis(); // reset the timer
       }
     }
-  } else { //3.6*1m/s = 1km/h, period/1000 converts from us to s
+  } else { 
+    // Once a magnet has been detected, we calculate our speed
+    // 3.6*1m/s = 1km/h, period/1000 converts from us to s
     bikeSpeed = 3.6*(pi*wheelDiameter/numMagnets)/(period/1000.0); 
-    lastInterrupt = millis();
-    if(millis() - lastSpeedCalc > 200) {    
+    lastInterrupt = millis(); // reset the timer
+    if(millis() - lastSpeedCalc > 200) { // don't update lcd too frequently
       updateLCD();
-      lastSpeedCalc = millis(); 
+      lastSpeedCalc = millis(); // reset the timer
     }
-  }
+  } 
 }
 
 // Checks whether the magnet is next to the sensor, 
@@ -145,30 +204,31 @@ void checkForMagnet()
 {
   if(analogRead(hallPin)<50)
   {
+    // we only set magnetFlag high if the magnet has been reset
     if(magnetReset==0){ 
       magnetFlag = 0;  // Logic to prevent multiple readings of one pass
     } else { 
+      // we set magnetFlag only after the first magnet reading following a reset
       magnetFlag = 1;
       magnetReset = 0;
     } 
   } else { 
+    // We say the magnet has been reset if the hallPin no longer detects it
     magnetFlag = 0;
     magnetReset = 1; 
   }
 }
 
 // Odometer
+// increments by the right amount after each pass of a magnet
 void updateDistances()
 {
   if(magnetFlag)
   {
     totalDistance += (pi*wheelDiameter/numMagnets);
+    tripDistance  += (pi*wheelDiameter/numMagnets);    
     EEPROM.write(address,totalDistance);
-    tripDistance  += (pi*wheelDiameter/numMagnets);
-    EEPROM.write(address+1,tripDistance);
-  }
-  if(digitalRead(tripSwitch)){
-    
+    EEPROM.write(address+10,tripDistance);
   }
 }
 
@@ -176,9 +236,9 @@ void updateDistances()
 void tripCount()
 {
   tripDistance = 0.0;
-  EEPROM.write(address+1,tripDistance);
+  EEPROM.write(address+10,tripDistance);
   tripID = tripID+1;
-  EEPROM.write(address+2, tripID);
+  EEPROM.write(address+20, tripID);
 }
 
 // Sends a packet of our rider's data to the Raspberry Pi
@@ -188,10 +248,71 @@ void sendToPi()
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
     root["Bike_Speed"] = bikeSpeed;
-    root["Trip_Distance"] = tripDistance;
-    root["Total_Distance"] = totalDistance; 
-    root["Trip_ID"] = EEPROM.read(address+2);   
+    root["Trip_Distance"] = EEPROM.read(address+10);
+    root["Total_Distance"] = EEPROM.read(address); 
+    root["Trip_ID"] = EEPROM.read(address+20);
+    root["Latitude"] = double_with_n_digits(latitude,5);
+    root["Longitude"] = double_with_n_digits(longitude,5);
+    root["Altitude"] = altitude;
     root.printTo(Serial);
     Serial.println();
     lastPiTransmit = millis();
 }
+
+//This function will read and remember two NMEA sentences from GPS
+void readGPS()
+{  
+  clearGPS();    //Serial port probably has old or corrupt data, so begin by clearing it all out
+  while(!GPS.newNMEAreceived()) { //Keep reading characters in this loop until a good NMEA sentence is received
+    c=GPS.read(); //read a character from the GPS
+  }
+  checkForMagnet();
+  updateDistances();
+  updateBikeSpeed();
+  GPS.parse(GPS.lastNMEA());  //Once you get a good NMEA, parse it
+  NMEA1=GPS.lastNMEA();      //Once parsed, save NMEA sentence into NMEA1
+  while(!GPS.newNMEAreceived()) {  //Go out and get the second NMEA sentence, should be different type than the first one read above.
+    c=GPS.read();
+  }
+  checkForMagnet();
+  updateDistances();
+  updateBikeSpeed();
+  GPS.parse(GPS.lastNMEA());
+  NMEA2=GPS.lastNMEA();
+  lastGPScheck = millis();
+}
+
+void clearGPS() 
+{  
+  //Since between GPS reads, we still have data streaming in, we need to clear the old data by reading a few sentences, and discarding these
+  while(!GPS.newNMEAreceived()) {
+    c=GPS.read();
+  }
+  checkForMagnet();
+  updateDistances();
+  updateBikeSpeed();
+  GPS.parse(GPS.lastNMEA());
+  while(!GPS.newNMEAreceived()) {
+    c=GPS.read();
+  }
+  checkForMagnet();
+  updateDistances();
+  updateBikeSpeed();
+  GPS.parse(GPS.lastNMEA());
+}
+
+double convertDegMinToDecDeg (float degMin) 
+{
+  double minutes = 0.0;
+  double decDeg = 0.0;
+ 
+  //get the minutes, fmod() requires double
+  minutes = fmod((double)degMin, 100.0);
+ 
+  //rebuild coordinates in decimal degrees
+  degMin = (int) ( degMin / 100 );
+  decDeg = degMin + ( minutes / 60 );
+ 
+  return decDeg;
+}
+
