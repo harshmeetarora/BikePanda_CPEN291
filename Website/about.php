@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Setting up the page attributes -->	  
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +11,7 @@
     <title>About Bike Panda</title>
 	<link rel="icon" href="http://example.com/favicon.png">
 
-	<!-- Tab icon -->
+	<!-- Tab icon (providing all sizes of the logo) -->
 	<link rel="apple-touch-icon" sizes="57x57" href="./images/apple-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="./images/apple-icon-60x60.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="./images/apple-icon-72x72.png">
@@ -32,7 +33,7 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
-	<!-- Style -->
+	<!-- CSS additional attributes -->
 	<style>
 		body {
 			background-color: aliceblue;
@@ -139,22 +140,15 @@
 			background: aliceblue;
 		}
 	</style>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
 
   <!-- BODY -->
-  <body>
+  <body>  
 	<div class="navbar navbar-inverse">
 		<div class="container">
 		</div>
 	</div>
-	<!-- NAV BAR -->
+	<!-- NAV BAR -- Setting up the page navbar -->
 	<nav class='navbar navbar-inverse navbar-fixed-top sticky' role='navigation'>
 	  <div class="container">
 		<div class="navbar-header">
@@ -199,6 +193,7 @@
 	<div class="container lettherebewhite">
 		<br>
 		<div class="col-md-2"></div>
+		<!-- Mission Statement -->
 		<div class="col-md-8 text-center">
 			<h4>Founded by seven Computer Engineering students from the University of British Columbia, Bike Panda was created to allow cyclists to get more out of their rides.</h4>
 			<blockquote class="blockquote">
@@ -219,10 +214,11 @@
 		<hr class="hr-1" data-content="Our Product"/>
 	</div>
 	<div class="container lettherebewhite">
+		<!-- Using Bootstrap Grid -->
 		<br>
 		<div class="col-md-1"></div>
 		<div class="col-md-5"><img class="img-thumbnail productimage" src="./images/bicycle2.jpg" alt="Bike Panda on a bike"></div>
-		<div class="col-md-5 textContainer text-center"><h4><i>The Bike Panda device is secured to your bicycle and tracks your trip.</br></br>By recording and charting trip data, Bike Panda shows statistics from past and current ride sessions so users can see their progress over time.</i></h4></div>
+		<div class="col-md-5 textContainer text-center"><h4><i>The Bike Panda device is secured to your bicycle and tracks your trip.<br><br>By recording and charting trip data, Bike Panda shows statistics from past and current ride sessions so users can see their progress over time.</i></h4></div>
 		<div class="col-md-1"></div>
 	</div>
 	<div class="container lettherebewhite">
