@@ -1,5 +1,6 @@
 <?php 
 
+// only serve get requests
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') != 0){
         die('Get request failed');
 }
@@ -20,6 +21,7 @@ $speed = 0;
 $calories = 0;
 $most_recent_row = 0;
 
+// get the most recent row
 if ($result = $mysqli->query("SELECT MAX(rowid) as rowid FROM bikedata")) {
 	while($row = $result->fetch_assoc()) {
 		$most_recent_row = $row["rowid"];
@@ -29,6 +31,7 @@ if ($result = $mysqli->query("SELECT MAX(rowid) as rowid FROM bikedata")) {
     echo "Error1: " . $sql . "<br>" . $mysqli->error;
 }
 
+// get the trip ID for the most recent row
 if ($result = $mysqli->query("SELECT trip_number FROM bikedata WHERE rowid = '".$most_recent_row."'")) {
         while($row = $result->fetch_assoc()) {
                 $current_trip = $row["trip_number"];
@@ -38,6 +41,7 @@ if ($result = $mysqli->query("SELECT trip_number FROM bikedata WHERE rowid = '".
     echo "Error1: " . $sql . "<br>" . $mysqli->error;
 }
 
+// get the starting timestamp for this trip ID
 if ($result = $mysqli->query("SELECT MIN(time) as time FROM bikedata WHERE trip_number = '".$current_trip."'")) {
         while($row = $result->fetch_assoc()) {
 		$trip_start = $row["time"];
@@ -47,27 +51,20 @@ if ($result = $mysqli->query("SELECT MIN(time) as time FROM bikedata WHERE trip_
     echo "Error2: " . $sql . "<br>" . $mysqli->error;
 }
 
-/*if ($result = $mysqli->query("SELECT SUM(calories) as calories FROM bikedata WHERE trip_number = '".$current_trip."'")) {
-        while($row = $result->fetch_assoc()) {
-                $calories = $row["calories"];
-        }
-        $result->free();
-} else {
-    echo "Error3: " . $sql . "<br>" . $mysqli->error;
-}*/
-
+// get the relevant data for this trip
 if ($result = $mysqli->query("SELECT altitude, speed, time, trip_distance FROM bikedata WHERE rowid = '".$most_recent_row."'")) {
 	while($row = $result->fetch_assoc()) {
-		$time = strtotime($row["time"]) - strtotime($trip_start);
-		$speed = $row["speed"];
-		$trip_distance = $row["trip_distance"];	
-		$altitude = $row["altitude"];
+    		$time = strtotime($row["time"]) - strtotime($trip_start); // calculate time in seconds from the beginning of the trip
+    		$speed = $row["speed"];
+    		$trip_distance = $row["trip_distance"];	
+    		$altitude = $row["altitude"];
         }
         $result->free();
 } else {
     echo "Error4: " . $sql . "<br>" . $mysqli->error;
 }
 
+// encode and return
 $arr = array('speed' => intval($speed), 'time' => $time, 'distance' => $trip_distance, 'calories' => $calories, 'altitude' => $altitude, 'tripId' => $current_trip);
 echo json_encode($arr);
 $mysqli->close();

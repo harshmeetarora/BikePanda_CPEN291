@@ -16,51 +16,34 @@ if(!isset($_GET['tripid'])) {
 	die('Get request failed on parameter');
 }
 
+// initialize lat and long to UBC
 $longitude = 49.2607;
 $latitude = -123.2461;
 $arr = array();
 $trip_number = $_GET['tripid'];
-$trip_start = 0;
 
-
-// get the time stamp for the beginning of the trip
-if($stmt1 = $conn->prepare("SELECT MIN(rowid) as rowid FROM bikedata WHERE trip_number = ?")) {
-        $stmt1->bind_param("i",$trip_number);
+// now get the GPS data for the trip!
+if($stmt = $conn->prepare("SELECT longitude, latitude FROM bikedata WHERE trip_number = ?")) {
+        $stmt->bind_param("i",$trip_number);
 } else {
         die("Prepared statement failed failed: " . $conn->error_list);
 }
 
-if (!$stmt1->execute()) {
-    die("Execute failed: (" . $stmt1->errno . ") " . $stmt1->error);
+// error checking
+if (!$stmt->execute()) {
+    die("Execute failed: (" . $stmt->errno . ") " . $stmt->error);
 }
 
-$stmt1->bind_result($trip_start);
-$stmt1->fetch();
-$stmt1->close();
+$stmt->bind_result($longitude, $latitude);
 
-
-// now get the rest of the data for the trip
-if($stmt2 = $conn->prepare("SELECT longitude, latitude FROM bikedata WHERE trip_number = ?")) {
-        $stmt2->bind_param("i",$trip_number);
-} else {
-        die("Prepared statement failed failed: " . $conn->error_list);
-}
-
-if (!$stmt2->execute()) {
-    die("Execute failed: (" . $stmt2->errno . ") " . $stmt2->error);
-}
-
-$stmt2->bind_result($longitude, $latitude);
-
-// fetch the row values of speed and time
-while($stmt2->fetch()) {
+// fetch the row values of latitude and longitude
+while($stmt->fetch()) {
 	array_push($arr, ['longitude' => $longitude, 'latitude' => $latitude]);
 }
 
-// add the date of the trip and send results
-//array_push($arr, ["start_time" => $trip_start]);
+// send results and close the db connection
 echo json_encode($arr);
-$stmt2->close();
+$stmt->close();
 $conn->close();
 ?>
 
