@@ -238,12 +238,12 @@
                 <button type="button" class="close" data-dismiss="alert">
                     <span>Close &times;</span></button></h3>
             </div>    
-
+		 <!-- create canvas for graphs -->
             <canvas id="SpeedTimeChart" width="400" height="200"></canvas>
-            <script>
+            <script> // static graphs
                 var myChart;
-                var ctx = document.getElementById("window");
-                var SpeedTime = 0;
+                var ctx = document.getElementById("window"); 
+                var SpeedTime = 0; 
                 var AltitudeDistance = 0;
                 var MapAPI = 0;
 
@@ -251,7 +251,7 @@
                 if (SpeedTime){
                     var responseData =[];
                     $.ajax(
-                                {
+                                { // retrieving data from the server and storing it in an array
                                     url:'./staticdata.php',
                                     dataType:'json',
                                     async: 'false',
@@ -271,9 +271,10 @@
                                 });
 
 
-                    var configurationSpeedTime = {
+                    var configurationSpeedTime = { // initializing speed time graph configurations
                         type: 'line',
-                        data: {
+                        data: {	
+			// initializing the data for the graph
                             datasets: [{
                                 borderColor: "rgb(10, 35, 117)",
                                 pointBackgroundColor: "rgb(10, 35, 117)",
@@ -283,6 +284,7 @@
                             }]
                         },
                         options: {
+			// initializing and setting options for graph
                             title: {
                                 display: false,
                                 //text: startTime,
@@ -335,6 +337,7 @@
                         }
                     };
                     setTimeout(function() {
+			// creating the chart in the provided window
                         myChart = new Chart(ctx, configurationSpeedTime);
                     }, 1000);
 
@@ -342,6 +345,7 @@
                     var freshData = [];
                     $.ajax(
                                 {
+				// retrieving data from the server and storing it in an array
                                     url:'./staticdata.php',
                                     dataType:'json',
                                     async: 'false',
@@ -358,9 +362,11 @@
                                     },
                                     error: function(){}
                                 });
-                    var configurationAltitudeDistance = {
+                    var configurationAltitudeDistance = { // initializing altitude distance graph configurations
+
                         type: 'line',
-                        data: {
+                        // initializing the data for the graph
+			data: {
                             datasets: [{
                                 borderColor: "rgb(8, 96, 8)",
                                 pointBackgroundColor: "rgb(8, 96, 8)",
@@ -368,7 +374,7 @@
                                 backgroundColor: "rgba(8, 96, 8, 0.2)",
                                 data: freshData
                             }]
-                        },
+                        },// initializing and setting options for graph
                         options: {
                             title: {
                                 display: false,
@@ -420,6 +426,7 @@
                         }
                     };
                     setTimeout(function() {
+			// creating the chart in the provided window
                         myChart = new Chart(ctx, configurationAltitudeDistance);
                     }, 1000);
 
@@ -434,6 +441,7 @@
                     var latLng = 0;
                     $.ajax(
                         {
+			// retrieving coordinates from the server and storing it in an array
                             url:'./staticmapsdata.php',
                             dataType:'json',
                             async: 'false',
@@ -446,6 +454,7 @@
                                 minLong = maxLong = data[0].longitude;
                                 minLat = maxLat = data[0].latitude;
                                 pathCoordninates.push( new google.maps.LatLng( minLong, minLat));
+				// save max and min latitude/longitude 
                                 for ( i = 1; i < data.length; i++){
                                     latitude = data[i].latitude;
                                     longitude = data[i].longitude;
@@ -467,18 +476,19 @@
                             },
                             error: function(){}
                         });
-
+			// calculate centre for map
                     latitude = (maxLat - minLat) / 2;
                     longitude = (maxLong - minLong) / 2;
 
                     setTimeout(function() {
-                        latLng = new google.maps.LatLng( latitude, longitude);
+                        latLng = new google.maps.LatLng( latitude, longitude); 
+			   // create new map 
                         myChart = new google.maps.Map(ctx, {
                             zoom: 3,
                             center: latLng,
                             mapTypeId: 'terrain'
                         });
-
+			// create traveled path 
                         var Path = new google.maps.Polyline({
                             path: pathCoordninates,
                             geodesic: true,
@@ -486,12 +496,12 @@
                             strokeOpacity: 1.0,
                             strokeWeight: 2
                         });
-
+			// add the path to the map
                         Path.setMap(myChart);
                     }, 1000);
                 }   
             };
-
+		// functions to initialzie variables for graph or map to be displayed
             function getSpeedGraphUp(){
                 SpeedTime = 1;
                 AltitudeDistance = 0;
@@ -523,6 +533,7 @@
             </script>
 
             <script>
+		// for real time graph
             //var myChart;
             var Data = [];
             var configuration;
@@ -535,7 +546,7 @@
             var ctx = document.getElementById("SpeedTimeChart");
 
 
-
+		// function to reconfigure the options for the updated graph (with additional data)
             function reconfigure(newData, maxTime, minTime){
                 configuration = {
                         type: 'line',
@@ -606,7 +617,7 @@
 		real_time = 1;
             setInterval(function(){
 
-                $.ajax(
+                $.ajax( // read most recent data available on server
                             {
                     url:'./livegraph.php',
                     dataType:'json',
@@ -624,23 +635,23 @@
                     },
                     error: function(){}
                 });
-
+		// if the data is new then add it to Data
                 if ( time != lastPlottedTime){
                 	
                     Data.push({
                         x: time,
                         y: speed
                     });
-
+		// calculate x axis min and max for new frame
                     maxTime = time + 10;//10 + 5 * (time/10);
                     minTime = time - 90;// 5 * (time/10);
 		    if (SpeedTime) {
-			    reconfigure(Data, maxTime, minTime);            
-			    myChart = new Chart(ctx, configuration);
+			    reconfigure(Data, maxTime, minTime); // update configuration with new information          
+			    myChart = new Chart(ctx, configuration); // create new frame
                     }
                     lastPlottedTime = time;
                 }
-            },1000);
+            },1000); // to continuously update graph
             }
             </script>
 
